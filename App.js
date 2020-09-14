@@ -9,15 +9,12 @@ import {
 
 import Voice from '@react-native-community/voice';
 
+let qusOne= "what is your name";
+let qusTwo= "from where you are";
+let qusThree="tell me something about you"
 class VoiceTest extends Component {
   state = {
-    recognized: '',
-    pitch: '',
-    error: '',
-    end: '',
-    started: '',
-    results: [],
-    partialResults: [],
+    results: "",
   };
 
   constructor(props) {
@@ -27,156 +24,82 @@ class VoiceTest extends Component {
     Voice.onSpeechEnd = this.onSpeechEnd;
     Voice.onSpeechError = this.onSpeechError;
     Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
-  componentWillUnmount() {
+  async componentDidMount(){
+    this.startRecognizing();
+  }
+
+  async componentWillUnmount() {
+    this.destroyRecognizer();
     Voice.destroy().then(Voice.removeAllListeners);
   }
 
-  onSpeechStart = (e) => {
-    console.log('onSpeechStart: ', e);
+  async startRecognizing (){
     this.setState({
-      started: '√',
-    });
-  };
-
-  onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized: ', e);
-    this.setState({
-      recognized: '√',
-    });
-  };
-
-  onSpeechEnd = (e) => {
-    console.log('onSpeechEnd: ', e);
-    this.setState({
-      end: '√',
-    });
-  };
-
-  onSpeechError = (e) => {
-    console.log('onSpeechError: ', e);
-    this.setState({
-      error: JSON.stringify(e.error),
-    });
-  };
-
-  onSpeechResults = (e) => {
-    console.log('onSpeechResults: ', e);
-    this.setState({
-      results: e.value,
-    });
-  };
-
-  onSpeechPartialResults = (e) => {
-    console.log('onSpeechPartialResults: ', e);
-    this.setState({
-      partialResults: e.value,
-    });
-  };
-
-  onSpeechVolumeChanged = (e) => {
-    console.log('onSpeechVolumeChanged: ', e);
-    this.setState({
-      pitch: e.value,
-    });
-  };
-
-  _startRecognizing = async () => {
-    this.setState({
-      recognized: '',
-      pitch: '',
-      error: '',
-      started: '',
-      results: [],
-      partialResults: [],
-      end: '',
+      result: " ",
     });
 
     try {
       await Voice.start('en-US');
+
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  _stopRecognizing = async () => {
-    try {
-      await Voice.stop();
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
-  _cancelRecognizing = async () => {
-    try {
-      await Voice.cancel();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  _destroyRecognizer = async () => {
+  async destroyRecognizer (){
     try {
       await Voice.destroy();
     } catch (e) {
       console.error(e);
     }
     this.setState({
-      recognized: '',
-      pitch: '',
-      error: '',
-      started: '',
-      results: [],
-      partialResults: [],
-      end: '',
+      results:" ",
     });
+  }
+
+  onSpeechStart = (e) => {
+    console.log('onSpeechStart');
   };
 
+  onSpeechRecognized = (e) => {
+    console.log('onSpeechRecognized');
+  };
+
+  onSpeechEnd = (e) => {
+    console.log('onSpeechEnd');
+    this.startRecognizing();
+  };
+
+  onSpeechError = (e) => {
+    console.log('onSpeechError');
+  };
+
+  onSpeechResults = (e) => {
+    console.log('onSpeechResults',e);
+    const latestArray=e.value[e.value.length-1];
+    const indexOfTrigger=latestArray.lastIndexOf("hey studio")
+    const question=latestArray.substring(indexOfTrigger+10,latestArray.length)
+    if(question.includes(qusOne)){
+      this.setState({"result":"My name is Studio Graphene"})
+    }else if(question.includes(qusTwo)){
+      this.setState({"result":"I am from London United Kingdom"})
+    }else if(question.includes(qusThree)){
+      this.setState({"result":"We’re a digital studio that works with both start-up founders and innovation teams to bring new ideas to life."})
+    }else {
+      this.setState({"result":"Sorry couldn't get you, that was you question: "+question})
+    }
+  };
+
+  
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native Voice!</Text>
-        <Text style={styles.instructions}>
-          Press the button and start speaking.
-        </Text>
-        <Text style={styles.stat}>{`Started: ${this.state.started}`}</Text>
-        <Text style={styles.stat}>{`Recognized: ${
-          this.state.recognized
-        }`}</Text>
-        <Text style={styles.stat}>{`Pitch: ${this.state.pitch}`}</Text>
-        <Text style={styles.stat}>{`Error: ${this.state.error}`}</Text>
+        <Text style={styles.instructions}> Ask question for given list </Text>
         <Text style={styles.stat}>Results</Text>
-        {this.state.results.map((result, index) => {
-          return (
-            <Text key={`result-${index}`} style={styles.stat}>
-              {result}
-            </Text>
-          );
-        })}
-        <Text style={styles.stat}>Partial Results</Text>
-        {this.state.partialResults.map((result, index) => {
-          return (
-            <Text key={`partial-result-${index}`} style={styles.stat}>
-              {result}
-            </Text>
-          );
-        })}
-        <Text style={styles.stat}>{`End: ${this.state.end}`}</Text>
-        <TouchableHighlight onPress={this._startRecognizing}>
-          <Image style={styles.button} source={require('./button.png')} />
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._stopRecognizing}>
-          <Text style={styles.action}>Stop Recognizing</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._cancelRecognizing}>
-          <Text style={styles.action}>Cancel</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._destroyRecognizer}>
-          <Text style={styles.action}>Destroy</Text>
-        </TouchableHighlight>
+        <Text style={styles.ans}>{this.state.result}</Text>
       </View>
     );
   }
@@ -193,17 +116,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  action: {
-    textAlign: 'center',
-    color: '#0000FF',
-    marginVertical: 5,
-    fontWeight: 'bold',
-  },
   instructions: {
     textAlign: 'center',
     color: '#333333',
@@ -212,6 +124,11 @@ const styles = StyleSheet.create({
   stat: {
     textAlign: 'center',
     color: '#B0171F',
+    marginBottom: 1,
+  },
+  ans: {
+    textAlign: 'center',
+    color: '#000',
     marginBottom: 1,
   },
 });
