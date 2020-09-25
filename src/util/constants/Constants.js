@@ -9,9 +9,17 @@ const Colors = {
 const NavigationConstants = {
   VoiceTest: 'VoiceTest',
   HomeScreen: 'HomeScreen',
+  RecipeScreen: 'RecipeScreen',
+};
+
+const Enums = {
+  one: 1,
+  two: 2,
+  three: 3,
 };
 
 module.exports = {
   Colors,
   NavigationConstants,
+  Enums,
 };

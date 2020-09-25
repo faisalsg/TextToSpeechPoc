@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Texts } from '../util/constants/Strings';
-import { Colors } from '../util/constants/Constants';
+import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import Voice from '@react-native-community/voice';
-import Tts from 'react-native-tts';
-Tts.setDefaultLanguage('en-US');
-Tts.setDefaultVoice('com.apple.ttsbundle.Moira-compact');
-Tts.setDefaultRate(0.7);
-Tts.setDefaultPitch(1);
+// import Tts from 'react-native-tts';
+// Tts.setDefaultLanguage('en-US');
+// Tts.setDefaultVoice('com.apple.ttsbundle.Moira-compact');
+// Tts.setDefaultRate(0.7);
+// Tts.setDefaultPitch(1);
 
 // Data that is associated with each dish
 const Data = [
@@ -101,6 +101,9 @@ export default class HomeScreen extends Component {
   buttonPressed = (title) => {
     this.setState({
       dishSelected: title,
+    });
+    this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
+      value: title,
     });
   };
 
