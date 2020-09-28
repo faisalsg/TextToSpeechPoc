@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  Alert,
+} from 'react-native';
 import { Texts, RecipeOne } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
-import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import TextAnimation from '../util/TextAnimation';
 
@@ -67,110 +73,10 @@ export default class RecipeScreen extends Component {
     super(props);
     this.state = {
       dishSelected: '',
-      results: '',
       step: 1,
       timer: 3,
     };
-    // Events invoked with constructor
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
   }
-  // As soon as the render ends Voice Reconizing function must start
-  async componentDidMount() {
-    this.startRecognizing();
-  }
-
-  async startRecognizing() {
-    this.setState({
-      results: ' ',
-    });
-    try {
-      await Voice.start('en-US');
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async stopRecognizing() {
-    try {
-      await Voice.stop();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async cancelRecognizing() {
-    try {
-      await Voice.cancel();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async destroyRecognizer() {
-    try {
-      await Voice.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      results: ' ',
-    });
-  }
-
-  onSpeechStart = (e) => {
-    console.log('onSpeechStart', e);
-  };
-
-  onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized', e);
-  };
-
-  onSpeechEnd = (e) => {
-    console.log('onSpeechEnd'), e;
-    this.destroyRecognizer();
-    this.startRecognizing();
-  };
-
-  onSpeechError = (e) => {
-    console.log('onSpeechError', e);
-  };
-
-  buttonPressed = (title) => {
-    this.setState({
-      dishSelected: title,
-    });
-  };
-
-  onSpeechResults = (e) => {
-    console.log('onSpeechResults', e);
-    // const latestArray = e.value[e.value.length - 1];
-    // // In the case we need to speak 'hey' particulary to give a command
-    // const indexOfTrigger = latestArray.lastIndexOf('hey');
-    // const title = latestArray
-    //   .substring(indexOfTrigger + 3, latestArray.length)
-    //   .toLowerCase();
-    // if (title.includes(Data[0].title.toLowerCase())) {
-    //   this.setState({
-    //     dishSelected: Data[0].title,
-    //   });
-    // } else if (title.includes(Data[1].title.toLowerCase())) {
-    //   this.setState({
-    //     dishSelected: Data[1].title,
-    //   });
-    // } else if (title.includes(Data[2].title.toLowerCase())) {
-    //   this.setState({
-    //     dishSelected: Data[2].title,
-    //   });
-    // } else {
-    //   this.setState({
-    //     results: "Sorry couldn't get you, that was your question: " + title,
-    //   });
-    // }
-  };
 
   render() {
     return (
@@ -259,7 +165,15 @@ export default class RecipeScreen extends Component {
       }
       return this.state.timer;
     } else if (this.state.step === Enums.two) {
-      return <TextAnimation content={RecipeData.ingred[0].step} />;
+      return (
+        <TextAnimation
+          content={RecipeData.ingred[0].step}
+          duration={3000}
+          onFinish={() => {
+            Alert.alert('Done');
+          }}
+        />
+      );
     } else if (this.state.step === Enums.three) {
       return Texts.recipe;
     } else {
