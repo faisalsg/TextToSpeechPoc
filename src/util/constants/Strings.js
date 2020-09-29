@@ -10,7 +10,7 @@ const Texts = {
   recepieThreeTitle: 'BBQ butter chicken',
   selectDish: 'Please select a dish:',
   letsPrepare: "Let's prepare",
-  ingredients: 'Ingridients',
+  ingredients: 'Ingredients',
   recipe: 'Recipe',
   completed: 'Completed',
   getReady: 'Get ready...',

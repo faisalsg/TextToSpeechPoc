@@ -6,12 +6,14 @@ import {
   SafeAreaView,
   Image,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { Texts, RecipeOne } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import TextAnimation from '../util/TextAnimation';
+import { Timer } from 'react-native-stopwatch-timer';
 
 const Data = [
   {
@@ -74,9 +76,27 @@ export default class RecipeScreen extends Component {
     this.state = {
       dishSelected: '',
       step: 1,
-      timer: 3,
+      countDownStart: 3,
+      timerStart: false,
+      totalDuration: 90000,
+      timerReset: false,
     };
   }
+
+  toggleTimer = () => {
+    this.setState({
+      timerStart: !this.state.timerStart,
+      timerReset: false,
+    });
+  };
+
+  resetTimer = () => {
+    this.setState({ timerStart: false, timerReset: true });
+  };
+
+  getFormattedTime = (time) => {
+    this.currentTime = time;
+  };
 
   render() {
     return (
@@ -106,10 +126,28 @@ export default class RecipeScreen extends Component {
               {this.getSubHeading()}
             </Text>
           </View>
-          <View>
-            <Text style={styles.mainContentStyle}>{this.getContent()}</Text>
+          <View style={styles.mainContent}>
+            <Text style={styles.mainContentText}>{this.getContent()}</Text>
           </View>
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            this.resetTimer();
+          }}
+        >
+          <Image source={ImageConstants.resetIcon} style={styles.resetIcon} />
+        </TouchableOpacity>
+        <Timer
+          totalDuration={this.state.totalDuration}
+          // msecs
+          start={this.state.timerStart}
+          reset={this.state.timerReset}
+          options={options}
+          handleFinish={() => {
+            console.log('done');
+          }}
+          getTime={this.getFormattedTime}
+        />
         <View style={{ flexDirection: 'row' }}>
           <CustomMainButton
             customContainer={styles.backForw}
@@ -120,7 +158,10 @@ export default class RecipeScreen extends Component {
           <CustomMainButton
             customContainer={styles.playButton}
             title={'Play/Pause'}
-            onPress={() => console.log('Play/Pause')}
+            onPress={() => {
+              console.log('play/pause');
+              this.toggleTimer();
+            }}
             customText={{ color: Colors.white }}
           />
           <CustomMainButton
@@ -135,12 +176,15 @@ export default class RecipeScreen extends Component {
   }
   componentDidMount() {
     this.interval = setInterval(
-      () => this.setState((prevState) => ({ timer: prevState.timer - 1 })),
+      () =>
+        this.setState((prevState) => ({
+          countDownStart: prevState.countDownStart - 1,
+        })),
       1500
     );
   }
   componentDidUpdate() {
-    if (this.state.timer === 0) {
+    if (this.state.countDownStart === 0) {
       clearInterval(this.interval);
     }
   }
@@ -158,12 +202,12 @@ export default class RecipeScreen extends Component {
   };
   getContent = () => {
     if (this.state.step === Enums.one) {
-      if (this.state.timer === 0) {
+      if (this.state.countDownStart === 0) {
         this.setState({
           step: 2,
         });
       }
-      return this.state.timer;
+      return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
       return (
         <TextAnimation
@@ -238,7 +282,7 @@ const styles = StyleSheet.create({
   },
   subHeadContainer: {
     alignItems: 'center',
-    marginTop: -100,
+    marginTop: -90,
   },
   playButton: {
     width: 150,
@@ -250,8 +294,30 @@ const styles = StyleSheet.create({
     marginHorizontal: 25,
     backgroundColor: Colors.darkPurple,
   },
-  mainContentStyle: {
+  mainContentText: {
     fontSize: 100,
     color: Colors.darkPurple,
   },
+  mainContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 30,
+  },
+  resetIcon: {
+    width: 25,
+    height: 25,
+  },
 });
+const options = {
+  container: {
+    padding: 5,
+    borderRadius: 5,
+    width: 220,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 30,
+    color: Colors.darkPurple,
+  },
+};

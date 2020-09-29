@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Animated } from 'react-native';
+import { Colors } from './constants/Constants';
 
 export default class TextAnimation extends React.Component {
   animatedValues = [];
@@ -42,7 +43,7 @@ export default class TextAnimation extends React.Component {
             <Animated.Text
               key={`${word}-${index}`}
               style={[
-                this.props.textStyle,
+                this.props.CustomTextStyle,
                 {
                   opacity: this.animatedValues[index],
                   transform: [
@@ -54,6 +55,7 @@ export default class TextAnimation extends React.Component {
                     },
                   ],
                 },
+                styles.textStyle,
               ]}
             >
               {word}
@@ -71,5 +73,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    width: 315,
+  },
+  textStyle: {
+    fontSize: 30,
+    color: Colors.darkPurple,
   },
 });
