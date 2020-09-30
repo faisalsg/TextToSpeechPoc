@@ -8,67 +8,13 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { Texts, RecipeOne } from '../util/constants/Strings';
+import { Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import TextAnimation from '../util/TextAnimation';
 import { Timer } from 'react-native-stopwatch-timer';
-
-const Data = [
-  {
-    title: Texts.recepieOneTitle,
-  },
-  {
-    title: Texts.recepieTwoTitle,
-  },
-  {
-    title: Texts.recepieThreeTitle,
-  },
-];
-const RecipeData = {
-  ingred: [
-    {
-      step: RecipeOne.ingredients.one,
-    },
-    {
-      step: RecipeOne.ingredients.two,
-    },
-    {
-      step: RecipeOne.ingredients.three,
-    },
-    {
-      step: RecipeOne.ingredients.four,
-    },
-    {
-      step: RecipeOne.ingredients.five,
-    },
-    {
-      step: RecipeOne.ingredients.six,
-    },
-    {
-      step: RecipeOne.ingredients.seven,
-    },
-    {
-      step: RecipeOne.ingredients.eight,
-    },
-    {
-      step: RecipeOne.ingredients.nine,
-    },
-    {
-      step: RecipeOne.ingredients.ten,
-    },
-    {
-      step: RecipeOne.ingredients.eleven,
-    },
-    {
-      step: RecipeOne.ingredients.tweleve,
-    },
-    {
-      step: RecipeOne.ingredients.thirteen,
-    },
-  ],
-};
+import { RecipeData, Data } from './MockData';
 
 export default class RecipeScreen extends Component {
   constructor(props) {

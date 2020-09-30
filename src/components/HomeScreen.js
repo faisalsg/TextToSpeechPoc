@@ -3,19 +3,9 @@ import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
+import { Data } from './MockData';
 
 // Data that is associated with each dish
-const Data = [
-  {
-    title: Texts.recepieOneTitle,
-  },
-  {
-    title: Texts.recepieTwoTitle,
-  },
-  {
-    title: Texts.recepieThreeTitle,
-  },
-];
 
 export default class HomeScreen extends Component {
   constructor(props) {
