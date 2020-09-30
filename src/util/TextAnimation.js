@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     width: 315,
   },
   textStyle: {
-    fontSize: 30,
+    fontSize: 25,
     color: Colors.darkPurple,
   },
 });
