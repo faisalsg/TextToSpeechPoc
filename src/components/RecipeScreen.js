@@ -26,6 +26,8 @@ export default class RecipeScreen extends Component {
       timerStart: false,
       totalDuration: 90000,
       timerReset: false,
+      currentIngStep: 0,
+      currentRecStep: 0,
     };
   }
 
@@ -99,7 +101,9 @@ export default class RecipeScreen extends Component {
             customContainer={styles.backForw}
             title={'<'}
             customText={{ color: Colors.white, fontSize: 30 }}
-            onPress={() => console.log('Back')}
+            onPress={() => {
+              console.log('Back');
+            }}
           />
           <CustomMainButton
             customContainer={styles.playButton}
@@ -129,9 +133,12 @@ export default class RecipeScreen extends Component {
       1500
     );
   }
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.countDownStart === 0) {
       clearInterval(this.interval);
+    }
+    if (prevState.currentIngStep !== this.state.currentIngStep) {
+      this.getContent();
     }
   }
 
@@ -157,15 +164,38 @@ export default class RecipeScreen extends Component {
     } else if (this.state.step === Enums.two) {
       return (
         <TextAnimation
-          content={RecipeData.ingred[0].step}
+          content={RecipeData.ingred[this.state.currentIngStep].step}
           duration={3000}
+          step={this.state.currentIngStep}
           onFinish={() => {
-            Alert.alert('Done');
+            this.state.currentIngStep === RecipeData.ingred.length
+              ? this.setState({ step: Enums.three })
+              : this.setState(
+                  {
+                    currentIngStep: this.state.currentIngStep + 1,
+                  },
+                  () => {
+                    console.log('After finish', this.state.currentIngStep);
+                  }
+                );
           }}
         />
       );
     } else if (this.state.step === Enums.three) {
-      return Texts.recipe;
+      return (
+        <TextAnimation
+          content={RecipeData.recipe[this.state.currentRecStep].step}
+          step={this.state.currentRecStep}
+          duration={3000}
+          onFinish={() => {
+            this.state.currentRecStep === RecipeData.recipe.length
+              ? this.setState({ step: Enums.four })
+              : this.setState({
+                  currentRecStep: this.state.currentRecStep + 1,
+                });
+          }}
+        />
+      );
     } else {
       return Texts.completed;
     }

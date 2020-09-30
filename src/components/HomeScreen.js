@@ -5,8 +5,6 @@ import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
 
-// Data that is associated with each dish
-
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
