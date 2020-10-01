@@ -12,4 +12,5 @@ export const ImageConstants = {
     ingred: require('./images/recipeOne/bbq_ing.jpg'),
   },
   resetIcon: require('./images/reset.png'),
+  micIcon: require('./images/mic.png'),
 };

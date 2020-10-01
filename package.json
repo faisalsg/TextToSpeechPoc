@@ -19,7 +19,8 @@
     "react-native-reanimated": "1.13.0",
     "react-native-safe-area-context": "3.1.8",
     "react-native-screens": "2.11.0",
-    "react-native-stopwatch-timer": "0.0.21"
+    "react-native-stopwatch-timer": "0.0.21",
+    "react-native-voice": "0.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",

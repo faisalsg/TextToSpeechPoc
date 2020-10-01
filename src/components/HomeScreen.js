@@ -4,6 +4,7 @@ import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
+import VoiceTest from '../util/VoiceTest';
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -27,6 +28,7 @@ export default class HomeScreen extends Component {
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>{Texts.clove}</Text>
+          <VoiceTest />
         </View>
         <View style={styles.container}>
           <View>
