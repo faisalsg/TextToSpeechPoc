@@ -7,20 +7,13 @@ export default class TextAnimation extends React.Component {
 
   constructor(props) {
     super(props);
-
-    const textArr = props.content.trim().split(' ');
-    textArr.forEach((_, i) => {
-      this.animatedValues[i] = new Animated.Value(0);
-    });
-    this.textArr = textArr;
+    this.state = {
+      value: [],
+    };
   }
 
-  componentDidMount() {
-    this.animated();
-  }
-
-  animated = (toValue = 1) => {
-    const animations = this.textArr.map((_, i) => {
+  animated = (textArr, toValue = 1) => {
+    const animations = textArr.map((_, i) => {
       return Animated.timing(this.animatedValues[i], {
         toValue,
         duration: this.props.duration,
@@ -36,9 +29,16 @@ export default class TextAnimation extends React.Component {
   };
 
   render() {
+    const toValue = 1;
+    console.log('props', this.props);
+    const textArr = this.props.content.trim().split(' ');
+    textArr.forEach((_, i) => {
+      this.animatedValues[i] = new Animated.Value(0);
+    });
+    this.animated(textArr);
     return (
       <View style={[this.props.style, styles.textContainer]}>
-        {this.textArr.map((word, index) => {
+        {textArr.map((word, index) => {
           return (
             <Animated.Text
               key={`${word}-${index}`}
@@ -59,7 +59,7 @@ export default class TextAnimation extends React.Component {
               ]}
             >
               {word}
-              {`${index < this.textArr.length ? ' ' : ''}`}
+              {`${index < textArr.length ? ' ' : ''}`}
             </Animated.Text>
           );
         })}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     width: 315,
   },
   textStyle: {
-    fontSize: 25,
+    fontSize: 30,
     color: Colors.darkPurple,
   },
 });
