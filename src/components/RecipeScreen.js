@@ -165,6 +165,9 @@ export default class RecipeScreen extends Component {
     if (this.state.countDownStart === 0) {
       clearInterval(this.interval);
     }
+    if (prevState.currentIngStep !== this.state.currentIngStep) {
+      this.getContent();
+    }
   }
 
   getSubHeading = () => {
@@ -195,14 +198,9 @@ export default class RecipeScreen extends Component {
           onFinish={() => {
             this.state.currentIngStep === RecipeData.ingred.length - 1
               ? this.setState({ step: Enums.three })
-              : this.setState(
-                  {
-                    currentIngStep: this.state.currentIngStep + 1,
-                  },
-                  () => {
-                    this.forceUpdate();
-                  }
-                );
+              : this.setState({
+                  currentIngStep: this.state.currentIngStep + 1,
+                });
           }}
         />
       );
