@@ -144,27 +144,27 @@ export default class RecipeScreen extends Component {
     if (this.state.step === Enums.one) {
       null;
     } else if (this.state.step === Enums.two) {
-      this.state.currentRecStep === 0
+      this.state.currentIngStep === 0
         ? this.setState({
             step: Enums.one,
           })
         : this.setState({
             currentIngStep: this.state.currentIngStep - 1,
           });
-    } else if (this.state.step === Enums.two) {
+    } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === 0
         ? this.setState({
             currentIngStep: 0,
-            step: Enums.one,
+            step: Enums.two,
           })
         : this.setState({
             currentRecStep: this.state.currentRecStep - 1,
           });
       // if at last step then move to recipe step
-    } else if (this.state.step === Enums.three) {
+    } else {
       this.setState({
         currentRecStep: 0,
-        step: Enums.two,
+        step: Enums.three,
       });
     }
   };
@@ -177,25 +177,24 @@ export default class RecipeScreen extends Component {
         step: Enums.two,
       });
     } else if (this.state.step === Enums.two) {
-      this.state.currentRecStep === RecipeData.ingred.length - 1
-        ? this.setState({
-            currentIngStep: 0,
-            step: Enums.three,
-          })
-        : this.setState({
-            currentIngStep: this.state.currentIngStep + 1,
-          });
-    } else if (this.state.step === Enums.two) {
-      this.state.currentRecStep === RecipeData.recipe.length - 1
+      this.state.currentIngStep === RecipeData.ingred.length - 1
         ? this.setState({
             currentRecStep: 0,
             step: Enums.three,
           })
         : this.setState({
+            currentIngStep: this.state.currentIngStep + 1,
+          });
+    } else if (this.state.step === Enums.three) {
+      this.state.currentRecStep === RecipeData.recipe.length - 1
+        ? this.setState({
+            step: Enums.three + 1,
+          })
+        : this.setState({
             currentRecStep: this.state.currentRecStep + 1,
           });
       // if at last step then do nothing
-    } else if (this.state.step === Enums.three) {
+    } else {
       null;
     }
   };
