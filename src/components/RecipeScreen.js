@@ -338,7 +338,7 @@ export default class RecipeScreen extends Component {
       return (
         <TextAnimation
           content={RecipeData.ingred[this.state.currentIngStep].step}
-          duration={3000}
+          duration={5000}
           step={this.state.currentIngStep}
           onFinish={() => {
             this.state.currentIngStep === RecipeData.ingred.length - 1
@@ -354,7 +354,7 @@ export default class RecipeScreen extends Component {
         <TextAnimation
           content={RecipeData.recipe[this.state.currentRecStep].step}
           step={this.state.currentRecStep}
-          duration={3000}
+          duration={5000}
           onFinish={() => {
             this.state.currentRecStep === RecipeData.recipe.length - 1
               ? this.setState({ step: Enums.four })

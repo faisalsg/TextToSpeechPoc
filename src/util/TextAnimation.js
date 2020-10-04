@@ -21,7 +21,7 @@ export default class TextAnimation extends React.Component {
       });
     });
 
-    Animated.stagger(this.props.duration / 5, animations).start(() => {
+    Animated.stagger(this.props.duration / 2, animations).start(() => {
       if (this.props.onFinish) {
         this.props.onFinish();
       }
@@ -42,21 +42,7 @@ export default class TextAnimation extends React.Component {
           return (
             <Animated.Text
               key={`${word}-${index}`}
-              style={[
-                this.props.CustomTextStyle,
-                {
-                  opacity: this.animatedValues[index],
-                  transform: [
-                    {
-                      translateY: Animated.multiply(
-                        this.animatedValues[index],
-                        new Animated.Value(-5)
-                      ),
-                    },
-                  ],
-                },
-                styles.textStyle,
-              ]}
+              style={[this.props.CustomTextStyle, styles.textStyle]}
             >
               {word}
               {`${index < textArr.length ? ' ' : ''}`}
