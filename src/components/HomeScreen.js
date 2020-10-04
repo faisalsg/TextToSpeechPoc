@@ -20,19 +20,13 @@ export default class HomeScreen extends Component {
     this.state = {
       dishSelected: '',
     };
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
   buttonPressed = (title) => {
     this.setState({
       dishSelected: title,
     });
+    this.destroyRecognizer();
     this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
       value: title,
     });
@@ -125,6 +119,13 @@ export default class HomeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
+                Voice.onSpeechStart = this.onSpeechStart;
+                Voice.onSpeechRecognized = this.onSpeechRecognized;
+                Voice.onSpeechEnd = this.onSpeechEnd;
+                Voice.onSpeechError = this.onSpeechError;
+                Voice.onSpeechResults = this.onSpeechResults;
+                Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+                Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
                 this.startRecognizing();
               }}
             >

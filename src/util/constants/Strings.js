@@ -14,6 +14,12 @@ const Texts = {
   recipe: 'Recipe',
   completed: 'Completed',
   getReady: 'Get ready...',
+  play: 'play',
+  pause: 'pause',
+  stop: 'stop',
+  reset: 'reset',
+  next: 'next',
+  previous: 'previous',
 };
 
 const RecipeOne = {

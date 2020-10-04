@@ -15,6 +15,7 @@ import { ImageConstants } from '../assets/ImageConstants';
 import TextAnimation from '../util/TextAnimation';
 import { Timer } from 'react-native-stopwatch-timer';
 import { RecipeData, Data } from './MockData';
+import Voice from 'react-native-voice';
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -31,6 +32,97 @@ export default class RecipeScreen extends Component {
     };
   }
 
+  async componentDidMount() {
+    this.startRecognizing();
+  }
+
+  async componentWillUnmount() {
+    this.destroyRecognizer();
+    Voice.destroy().then(Voice.removeAllListeners);
+  }
+
+  async startRecognizing() {
+    this.setState({
+      result: ' ',
+    });
+
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async destroyRecognizer() {
+    try {
+      await Voice.destroy();
+    } catch (e) {
+      console.error(e);
+    }
+    this.setState({
+      results: ' ',
+    });
+  }
+
+  onSpeechStart = (e) => {
+    console.log('onSpeechStart', e);
+  };
+
+  onSpeechRecognized = (e) => {
+    console.log('onSpeechRecognized', e);
+  };
+
+  onSpeechEnd = (e) => {
+    console.log('onSpeechEnd', e);
+  };
+
+  onSpeechError = (e) => {
+    console.log('onSpeechError', e);
+    this.setState({
+      error: JSON.stringify(e.error),
+    });
+  };
+
+  onSpeechPartialResults = (e) => {
+    console.log('onSpeechPartialResults: ', e);
+    this.setState({
+      partialResults: e.value,
+    });
+  };
+
+  onSpeechVolumeChanged = (e) => {
+    console.log('onSpeechVolumeChanged: ', e);
+  };
+
+  onSpeechResults = (e) => {
+    console.log('onSpeechResults', e);
+    const latestArray = e.value[e.value.length - 1];
+    const indexOfTrigger = latestArray.lastIndexOf('Hey');
+    const question = latestArray
+      .substring(indexOfTrigger + 3, latestArray.length)
+      .toLowerCase();
+    // Action to play/pause the timer.
+    if (
+      question.includes(Texts.play) ||
+      question.includes(Texts.pause) ||
+      question.includes(Texts.stop)
+    ) {
+      this.toggleTimer();
+      // Action to reset timer
+    } else if (question.includes(Texts.reset)) {
+      this.resetTimer();
+      // Action to next step
+    } else if (question.includes(Texts.next)) {
+      this.nextStep();
+      // Action to previous step
+    } else if (question.includes(Texts.previous)) {
+      this.previousStep();
+      // default action
+    } else {
+      console.log('Not recognized');
+    }
+  };
+
   toggleTimer = () => {
     this.setState({
       timerStart: !this.state.timerStart,
@@ -46,6 +138,68 @@ export default class RecipeScreen extends Component {
     this.currentTime = time;
   };
 
+  previousStep = () => {
+    console.log('Back');
+    // if at step 0 do nothing
+    if (this.state.step === Enums.one) {
+      null;
+    } else if (this.state.step === Enums.two) {
+      this.state.currentRecStep === 0
+        ? this.setState({
+            step: Enums.one,
+          })
+        : this.setState({
+            currentIngStep: this.state.currentIngStep - 1,
+          });
+    } else if (this.state.step === Enums.two) {
+      this.state.currentRecStep === 0
+        ? this.setState({
+            currentIngStep: 0,
+            step: Enums.one,
+          })
+        : this.setState({
+            currentRecStep: this.state.currentRecStep - 1,
+          });
+      // if at last step then move to recipe step
+    } else if (this.state.step === Enums.three) {
+      this.setState({
+        currentRecStep: 0,
+        step: Enums.two,
+      });
+    }
+  };
+
+  nextStep = () => {
+    console.log('forw');
+    // if at step 0 will again be at step 0
+    if (this.state.step === Enums.one) {
+      this.setState({
+        step: Enums.two,
+      });
+    } else if (this.state.step === Enums.two) {
+      this.state.currentRecStep === RecipeData.ingred.length - 1
+        ? this.setState({
+            currentIngStep: 0,
+            step: Enums.three,
+          })
+        : this.setState({
+            currentIngStep: this.state.currentIngStep + 1,
+          });
+    } else if (this.state.step === Enums.two) {
+      this.state.currentRecStep === RecipeData.recipe.length - 1
+        ? this.setState({
+            currentRecStep: 0,
+            step: Enums.three,
+          })
+        : this.setState({
+            currentRecStep: this.state.currentRecStep + 1,
+          });
+      // if at last step then do nothing
+    } else if (this.state.step === Enums.three) {
+      null;
+    }
+  };
+
   render() {
     return (
       <SafeAreaView style={styles.rootContainer}>
@@ -59,6 +213,22 @@ export default class RecipeScreen extends Component {
           >
             {this.props.route.params.value}
           </Text>
+          <View style={styles.micContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                Voice.onSpeechStart = this.onSpeechStart;
+                Voice.onSpeechRecognized = this.onSpeechRecognized;
+                Voice.onSpeechEnd = this.onSpeechEnd;
+                Voice.onSpeechError = this.onSpeechError;
+                Voice.onSpeechResults = this.onSpeechResults;
+                Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+                Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
+                this.startRecognizing();
+              }}
+            >
+              <Image style={styles.imgMic} source={ImageConstants.micIcon} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.container}>
           <View>
@@ -92,7 +262,7 @@ export default class RecipeScreen extends Component {
           reset={this.state.timerReset}
           options={options}
           handleFinish={() => {
-            console.log('done');
+            // console.log('done');
           }}
           getTime={this.getFormattedTime}
         />
@@ -102,20 +272,7 @@ export default class RecipeScreen extends Component {
             title={'<'}
             customText={{ color: Colors.white, fontSize: 30 }}
             onPress={() => {
-              console.log('Back');
-              if (this.state.step === Enums.two) {
-                this.state.currentIngStep === 0
-                  ? null
-                  : this.setState({
-                      currentIngStep: this.state.currentIngStep - 1,
-                    });
-              } else if (this.state.step === Enums.three) {
-                this.state.currentRecStep === 0
-                  ? null
-                  : this.setState({
-                      currentRecStep: this.state.currentRecStep - 1,
-                    });
-              }
+              this.previousStep();
             }}
           />
           <CustomMainButton
@@ -132,20 +289,7 @@ export default class RecipeScreen extends Component {
             title={'>'}
             customText={{ color: Colors.white, fontSize: 30 }}
             onPress={() => {
-              console.log('forw');
-              if (this.state.step === Enums.two) {
-                this.state.currentIngStep === 0
-                  ? null
-                  : this.setState({
-                      currentIngStep: this.state.currentIngStep - 1,
-                    });
-              } else if (this.state.step === Enums.three) {
-                this.state.currentRecStep === 0
-                  ? null
-                  : this.setState({
-                      currentRecStep: this.state.currentRecStep - 1,
-                    });
-              }
+              this.nextStep();
             }}
           />
         </View>
@@ -187,6 +331,8 @@ export default class RecipeScreen extends Component {
         this.setState({
           step: 2,
         });
+        // TODO: this.toggleTimer(); has to be checked as this is not letting to pause and reset if initiated from here.
+        // this.toggleTimer();
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
@@ -256,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.lightPurple,
-    height: 150,
+    height: 180,
     width: '100%',
     borderRadius: 50,
     paddingTop: 40,
@@ -306,6 +452,15 @@ const styles = StyleSheet.create({
   resetIcon: {
     width: 25,
     height: 25,
+  },
+  micContainer: {
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  imgMic: {
+    width: 50,
+    height: 50,
   },
 });
 const options = {
