@@ -96,10 +96,10 @@ export default class HomeScreen extends Component {
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
-    const indexOfTrigger = latestArray.lastIndexOf('Hey');
     const question = latestArray
-      .substring(indexOfTrigger + 3, latestArray.length)
+      .substring(-1, latestArray.length)
       .toLowerCase();
+
     if (question.includes(Data[0].title.toLowerCase())) {
       this.buttonPressed(Data[0].title);
     } else if (question.includes(Data[1].title.toLowerCase())) {

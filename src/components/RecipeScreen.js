@@ -5,7 +5,6 @@ import {
   View,
   SafeAreaView,
   Image,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
@@ -97,9 +96,8 @@ export default class RecipeScreen extends Component {
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
-    const indexOfTrigger = latestArray.lastIndexOf('Hey');
     const question = latestArray
-      .substring(indexOfTrigger + 3, latestArray.length)
+      .substring(-1, latestArray.length)
       .toLowerCase();
     // Action to play/pause the timer.
     if (
@@ -331,7 +329,7 @@ export default class RecipeScreen extends Component {
           step: 2,
         });
         // TODO: this.toggleTimer(); has to be checked as this is not letting to pause and reset if initiated from here.
-        // this.toggleTimer();
+        this.toggleTimer();
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
