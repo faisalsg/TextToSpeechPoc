@@ -11,8 +11,7 @@ import { Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
-import TextAnimation from '../util/TextAnimation';
-import { Timer } from 'react-native-stopwatch-timer';
+import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
 import Voice from 'react-native-voice';
 
@@ -115,6 +114,14 @@ export default class RecipeScreen extends Component {
       // Action to previous step
     } else if (question.includes(Texts.previous)) {
       this.previousStep();
+      this.destroyRecognizer();
+      // Move to home screen
+    } else if (
+      question.includes(Texts.mainMenu) ||
+      question.includes(Texts.homeScreen)
+    ) {
+      this.props.navigation.goBack();
+      this.destroyRecognizer();
       // default action
     } else {
       console.log('Not recognized');
@@ -242,7 +249,16 @@ export default class RecipeScreen extends Component {
             </Text>
           </View>
           <View style={styles.mainContent}>
-            <Text style={styles.mainContentText}>{this.getContent()}</Text>
+            <Text
+              style={[
+                styles.mainContentText,
+                this.state.step === Enums.three || this.state.step === Enums.two
+                  ? { fontSize: 30, flexWrap: 'wrap', textAlign: 'center' }
+                  : { fontSize: 80 },
+              ]}
+            >
+              {this.getContent()}
+            </Text>
           </View>
         </View>
         <TouchableOpacity
@@ -306,9 +322,6 @@ export default class RecipeScreen extends Component {
     if (this.state.countDownStart === 0) {
       clearInterval(this.interval);
     }
-    if (prevState.currentIngStep !== this.state.currentIngStep) {
-      this.getContent();
-    }
   }
 
   getSubHeading = () => {
@@ -326,41 +339,27 @@ export default class RecipeScreen extends Component {
     if (this.state.step === Enums.one) {
       if (this.state.countDownStart === 0) {
         this.setState({
-          step: 2,
+          step: Enums.two,
         });
-        // TODO: this.toggleTimer(); has to be checked as this is not letting to pause and reset if initiated from here.
         this.toggleTimer();
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
       return (
-        <TextAnimation
-          content={RecipeData.ingred[this.state.currentIngStep].step}
-          duration={5000}
-          step={this.state.currentIngStep}
-          onFinish={() => {
-            this.state.currentIngStep === RecipeData.ingred.length - 1
-              ? this.setState({ step: Enums.three })
-              : this.setState({
-                  currentIngStep: this.state.currentIngStep + 1,
-                });
-          }}
-        />
+        <Text>{RecipeData.ingred[this.state.currentIngStep].step}</Text>
+
+        //     this.state.currentIngStep === RecipeData.ingred.length - 1
+        //       ? this.setState({ step: Enums.three })
+        //       : this.setState({
+        //           currentIngStep: this.state.currentIngStep + 1,
       );
     } else if (this.state.step === Enums.three) {
       return (
-        <TextAnimation
-          content={RecipeData.recipe[this.state.currentRecStep].step}
-          step={this.state.currentRecStep}
-          duration={5000}
-          onFinish={() => {
-            this.state.currentRecStep === RecipeData.recipe.length - 1
-              ? this.setState({ step: Enums.four })
-              : this.setState({
-                  currentRecStep: this.state.currentRecStep + 1,
-                });
-          }}
-        />
+        <Text>{RecipeData.recipe[this.state.currentRecStep].step}</Text>
+        //     this.state.currentRecStep === RecipeData.recipe.length - 1
+        //       ? this.setState({ step: Enums.four })
+        //       : this.setState({
+        //           currentRecStep: this.state.currentRecStep + 1,
       );
     } else {
       return Texts.completed;
@@ -437,7 +436,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkPurple,
   },
   mainContentText: {
-    fontSize: 90,
     color: Colors.darkPurple,
   },
   mainContent: {

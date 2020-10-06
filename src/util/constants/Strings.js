@@ -20,6 +20,8 @@ const Texts = {
   reset: 'reset',
   next: 'next',
   previous: 'previous',
+  mainMenu: 'main menu',
+  homeScreen: 'home screen',
 };
 
 const RecipeOne = {
