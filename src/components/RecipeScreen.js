@@ -12,7 +12,7 @@ import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import TextAnimation from '../util/TextAnimation';
-import { Timer } from 'react-native-stopwatch-timer';
+import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
 import Voice from 'react-native-voice';
 
@@ -24,7 +24,7 @@ export default class RecipeScreen extends Component {
       step: 1,
       countDownStart: 3,
       timerStart: false,
-      totalDuration: 90000,
+      totalDuration: 900,
       timerReset: false,
       currentIngStep: 0,
       currentRecStep: 0,
@@ -106,15 +106,19 @@ export default class RecipeScreen extends Component {
       question.includes(Texts.stop)
     ) {
       this.toggleTimer();
+      this.destroyRecognizer();
       // Action to reset timer
     } else if (question.includes(Texts.reset)) {
       this.resetTimer();
+      this.destroyRecognizer();
       // Action to next step
     } else if (question.includes(Texts.next)) {
       this.nextStep();
+      this.destroyRecognizer();
       // Action to previous step
     } else if (question.includes(Texts.previous)) {
       this.previousStep();
+      this.destroyRecognizer();
       // default action
     } else {
       console.log('Not recognized');
@@ -124,12 +128,12 @@ export default class RecipeScreen extends Component {
   toggleTimer = () => {
     this.setState({
       timerStart: !this.state.timerStart,
-      timerReset: false,
+      // timerReset: false,
     });
   };
 
   resetTimer = () => {
-    this.setState({ timerStart: false, timerReset: true });
+    this.setState({ timerReset: !this.state.timerReset, timerStart: true });
   };
 
   getFormattedTime = (time) => {
@@ -245,23 +249,18 @@ export default class RecipeScreen extends Component {
             <Text style={styles.mainContentText}>{this.getContent()}</Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            this.resetTimer();
-          }}
-        >
-          <Image source={ImageConstants.resetIcon} style={styles.resetIcon} />
-        </TouchableOpacity>
-        <Timer
-          totalDuration={this.state.totalDuration}
-          // msecs
-          start={this.state.timerStart}
-          reset={this.state.timerReset}
-          options={options}
-          handleFinish={() => {
-            // console.log('done');
-          }}
-          getTime={this.getFormattedTime}
+        <CountDown
+          id={this.state.timerReset}
+          until={this.state.totalDuration}
+          onFinish={() => alert('finished')}
+          onPress={() => this.resetTimer()}
+          digitStyle={styles.stopwatchContainer}
+          digitTxtStyle={styles.stopwatchText}
+          timeToShow={['H', 'M', 'S']}
+          timeLabels={{ h: null, m: null, s: null }}
+          size={20}
+          running={this.state.timerStart}
+          showSeparator
         />
         <View style={{ flexDirection: 'row' }}>
           <CustomMainButton
@@ -459,16 +458,15 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-});
-const options = {
-  container: {
-    padding: 5,
-    borderRadius: 5,
-    width: 220,
+  stopwatchContainer: {
     alignItems: 'center',
+    backgroundColor: Colors.lightPurple,
+    marginHorizontal: 5,
   },
-  text: {
-    fontSize: 30,
+  stopwatchText: {
+    fontSize: 35,
     color: Colors.darkPurple,
+    fontWeight: '500',
+    textAlign: 'center',
   },
-};
+});
