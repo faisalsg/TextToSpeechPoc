@@ -42,7 +42,7 @@ export default class HomeScreen extends Component {
     this.startRecognizing();
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     this.destroyRecognizer();
     Voice.destroy().then(Voice.removeAllListeners);
   }

@@ -24,7 +24,7 @@ export default class RecipeScreen extends Component {
       countDownStart: 3,
       timerStart: false,
       totalDuration: 900,
-      timerReset: false,
+      timerReset: '0',
       currentIngStep: 0,
       currentRecStep: 0,
     };
@@ -156,7 +156,10 @@ export default class RecipeScreen extends Component {
   };
 
   resetTimer = () => {
-    this.setState({ timerReset: !this.state.timerReset, timerStart: true });
+    this.setState({
+      timerReset: (this.state.timerReset + 1).toString(),
+      timerStart: true,
+    });
   };
 
   getFormattedTime = (time) => {
@@ -278,7 +281,9 @@ export default class RecipeScreen extends Component {
           id={this.state.timerReset}
           until={this.state.totalDuration}
           onFinish={() => alert('finished')}
-          onPress={() => this.resetTimer()}
+          onPress={() => {
+            this.resetTimer();
+          }}
           digitStyle={styles.stopwatchContainer}
           digitTxtStyle={styles.stopwatchText}
           timeToShow={['H', 'M', 'S']}
