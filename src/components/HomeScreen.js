@@ -11,7 +11,7 @@ import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
-import Voice from 'react-native-voice';
+import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 
 export default class HomeScreen extends Component {
@@ -20,6 +20,13 @@ export default class HomeScreen extends Component {
     this.state = {
       dishSelected: '',
     };
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
   buttonPressed = (title) => {
@@ -35,7 +42,7 @@ export default class HomeScreen extends Component {
     this.startRecognizing();
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
     this.destroyRecognizer();
     Voice.destroy().then(Voice.removeAllListeners);
   }
@@ -73,6 +80,7 @@ export default class HomeScreen extends Component {
 
   onSpeechEnd = (e) => {
     console.log('onSpeechEnd', e);
+    this.startRecognizing();
   };
 
   onSpeechError = (e) => {
@@ -90,24 +98,31 @@ export default class HomeScreen extends Component {
   };
 
   onSpeechVolumeChanged = (e) => {
-    console.log('onSpeechVolumeChanged: ', e);
+    // console.log('onSpeechVolumeChanged: ', e);
   };
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
-    const question = latestArray
-      .substring(-1, latestArray.length)
-      .toLowerCase();
-
-    if (question.includes(Data[0].title.toLowerCase())) {
-      this.buttonPressed(Data[0].title);
-    } else if (question.includes(Data[1].title.toLowerCase())) {
-      this.buttonPressed(Data[1].title);
-    } else if (question.includes(Data[2].title.toLowerCase())) {
-      this.buttonPressed(Data[2].title);
-    } else {
-      console.log('Not recognized');
+    const indexOfTrigger =
+      latestArray.lastIndexOf('hey Alexa') ||
+      latestArray.lastIndexOf('Hey Alexa');
+    if (
+      latestArray.includes('hey Alexa') ||
+      latestArray.includes('Hey Alexa')
+    ) {
+      const question = latestArray
+        .substring(indexOfTrigger + 9, latestArray.length)
+        .toLowerCase();
+      if (question.includes(Data[0].title.toLowerCase())) {
+        this.buttonPressed(Data[0].title);
+      } else if (question.includes(Data[1].title.toLowerCase())) {
+        this.buttonPressed(Data[1].title);
+      } else if (question.includes(Data[2].title.toLowerCase())) {
+        this.buttonPressed(Data[2].title);
+      } else {
+        console.log('Not recognized');
+      }
     }
   };
 
@@ -119,13 +134,6 @@ export default class HomeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
-                Voice.onSpeechStart = this.onSpeechStart;
-                Voice.onSpeechRecognized = this.onSpeechRecognized;
-                Voice.onSpeechEnd = this.onSpeechEnd;
-                Voice.onSpeechError = this.onSpeechError;
-                Voice.onSpeechResults = this.onSpeechResults;
-                Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-                Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
                 this.startRecognizing();
               }}
             >

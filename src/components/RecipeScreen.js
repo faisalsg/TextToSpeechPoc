@@ -13,7 +13,7 @@ import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
-import Voice from 'react-native-voice';
+import Voice from '@react-native-community/voice';
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -28,13 +28,20 @@ export default class RecipeScreen extends Component {
       currentIngStep: 0,
       currentRecStep: 0,
     };
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
   async componentDidMount() {
     this.startRecognizing();
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
     this.destroyRecognizer();
     Voice.destroy().then(Voice.removeAllListeners);
   }
@@ -72,6 +79,7 @@ export default class RecipeScreen extends Component {
 
   onSpeechEnd = (e) => {
     console.log('onSpeechEnd', e);
+    this.startRecognizing();
   };
 
   onSpeechError = (e) => {
@@ -89,46 +97,55 @@ export default class RecipeScreen extends Component {
   };
 
   onSpeechVolumeChanged = (e) => {
-    console.log('onSpeechVolumeChanged: ', e);
+    // console.log('onSpeechVolumeChanged: ', e);
   };
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
-    const question = latestArray
-      .substring(-1, latestArray.length)
-      .toLowerCase();
-    // Action to play/pause the timer.
+    const indexOfTrigger =
+      latestArray.lastIndexOf('hey Alexa') ||
+      latestArray.lastIndexOf('Hey Alexa');
     if (
-      question.includes(Texts.play) ||
-      question.includes(Texts.pause) ||
-      question.includes(Texts.stop)
+      latestArray.includes('hey clove') ||
+      latestArray.includes('Hey Alexa')
     ) {
-      this.toggleTimer();
-      this.destroyRecognizer();
-      // Action to reset timer
-    } else if (question.includes(Texts.reset)) {
-      this.resetTimer();
-      this.destroyRecognizer();
-      // Action to next step
-    } else if (question.includes(Texts.next)) {
-      this.nextStep();
-      this.destroyRecognizer();
-      // Action to previous step
-    } else if (question.includes(Texts.previous)) {
-      this.previousStep();
-      this.destroyRecognizer();
-      // Move to home screen
-    } else if (
-      question.includes(Texts.mainMenu) ||
-      question.includes(Texts.homeScreen)
-    ) {
-      this.props.navigation.goBack();
-      this.destroyRecognizer();
-      // default action
-    } else {
-      console.log('Not recognized');
+      const question = latestArray
+        .substring(indexOfTrigger + 9, latestArray.length)
+        .toLowerCase();
+      // Action to play/pause the timer.
+      if (
+        question.includes(Texts.play) ||
+        question.includes(Texts.pause) ||
+        question.includes(Texts.stop)
+      ) {
+        this.toggleTimer();
+
+        // Action to reset timer
+      } else if (question.includes(Texts.reset)) {
+        this.resetTimer();
+
+        // Action to next step
+      } else if (question.includes(Texts.next)) {
+        this.nextStep();
+
+        // Action to previous step
+      } else if (question.includes(Texts.previous)) {
+        this.previousStep();
+
+        // Move to home screen
+      } else if (
+        question.includes(Texts.mainMenu) ||
+        question.includes(Texts.homeScreen)
+      ) {
+        this.props.navigation.goBack();
+
+        // default action
+      } else {
+        console.log('Not recognized');
+      }
     }
+    this.startRecognizing();
   };
 
   toggleTimer = () => {
@@ -223,13 +240,6 @@ export default class RecipeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
-                Voice.onSpeechStart = this.onSpeechStart;
-                Voice.onSpeechRecognized = this.onSpeechRecognized;
-                Voice.onSpeechEnd = this.onSpeechEnd;
-                Voice.onSpeechError = this.onSpeechError;
-                Voice.onSpeechResults = this.onSpeechResults;
-                Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-                Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
                 this.startRecognizing();
               }}
             >
