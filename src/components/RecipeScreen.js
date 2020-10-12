@@ -52,7 +52,7 @@ export default class RecipeScreen extends Component {
     });
 
     try {
-      await Voice.start('en-US');
+      await Voice.start('en_US');
     } catch (e) {
       console.error(e);
     }
@@ -107,7 +107,7 @@ export default class RecipeScreen extends Component {
       latestArray.lastIndexOf('hey Alexa') ||
       latestArray.lastIndexOf('Hey Alexa');
     if (
-      latestArray.includes('hey clove') ||
+      latestArray.includes('hey Alexa') ||
       latestArray.includes('Hey Alexa')
     ) {
       const question = latestArray
@@ -145,7 +145,6 @@ export default class RecipeScreen extends Component {
         console.log('Not recognized');
       }
     }
-    this.startRecognizing();
   };
 
   toggleTimer = () => {
@@ -321,20 +320,6 @@ export default class RecipeScreen extends Component {
         </View>
       </SafeAreaView>
     );
-  }
-  componentDidMount() {
-    this.interval = setInterval(
-      () =>
-        this.setState((prevState) => ({
-          countDownStart: prevState.countDownStart - 1,
-        })),
-      1500
-    );
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.countDownStart === 0) {
-      clearInterval(this.interval);
-    }
   }
 
   getSubHeading = () => {

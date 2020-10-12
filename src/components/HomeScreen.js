@@ -53,7 +53,7 @@ export default class HomeScreen extends Component {
     });
 
     try {
-      await Voice.start('en-US');
+      await Voice.start('en_US');
     } catch (e) {
       console.error(e);
     }
@@ -146,9 +146,10 @@ export default class HomeScreen extends Component {
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
           <View>
-            {Data.map((value) => {
+            {Data.map((value, index) => {
               return (
                 <CustomMainButton
+                  key={index}
                   title={value.title}
                   onPress={() => this.buttonPressed(value.title)}
                   customContainer={{
