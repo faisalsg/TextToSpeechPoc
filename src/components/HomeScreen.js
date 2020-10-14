@@ -38,27 +38,27 @@ export default class HomeScreen extends Component {
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
 
     // Event Listners for speech-to-text
-
+    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
     Tts.setDefaultPitch(this.state.speechPitch);
     Tts.getInitStatus().then(this.initTts);
   }
 
-  buttonPressed = (title) => {
-    this.setState(
-      {
-        dishSelected: title,
-      },
-      () => {
-        this.readText(title);
-      }
-    );
-    this.destroyRecognizer();
+  buttonPressed = async (title) => {
+    await this.readText(title);
+    this.setState({ dishSelected: title });
+  };
 
+  moveToRecipeScreen() {
+    let title = this.state.dishSelected;
+    this.destroyRecognizer();
     this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
       value: title,
     });
-  };
+  }
+
   async componentDidMount() {
     this.startRecognizing();
   }
@@ -158,7 +158,7 @@ export default class HomeScreen extends Component {
     // But here the voice is set as per iOS
     // Selection is based as per language en-US
     // TODO: In future needs to get set for android also.
-    console.log(voices);
+    // console.log(voices);
 
     let selectedVoice = null;
 
