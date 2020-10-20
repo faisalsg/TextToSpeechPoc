@@ -13,13 +13,22 @@ import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
 import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
+import Tts from 'react-native-tts';
+import { event } from 'react-native-reanimated';
 
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dishSelected: '',
+      speechRate: 0.5,
+      speechPitch: 1,
+      text: 'This is an example text',
+      voices: [],
+      ttsStatus: 'initiliazing',
+      selectedVoice: null,
     };
+    // Event Listners for speech-to-text
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
     Voice.onSpeechEnd = this.onSpeechEnd;
@@ -27,17 +36,29 @@ export default class HomeScreen extends Component {
     Voice.onSpeechResults = this.onSpeechResults;
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
+
+    // Event Listners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
-  buttonPressed = (title) => {
-    this.setState({
-      dishSelected: title,
-    });
+  buttonPressed = async (title) => {
+    await this.readText(title);
+    this.setState({ dishSelected: title });
+  };
+
+  moveToRecipeScreen() {
+    let title = this.state.dishSelected;
     this.destroyRecognizer();
     this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
       value: title,
     });
-  };
+  }
+
   async componentDidMount() {
     this.startRecognizing();
   }
@@ -124,6 +145,44 @@ export default class HomeScreen extends Component {
         console.log('Not recognized');
       }
     }
+  };
+
+  initTts = async () => {
+    const voices = await Tts.voices();
+    const availableVoices = voices
+      .filter((v) => !v.networkConnectionRequired && !v.notInstalled)
+      .map((v) => {
+        return { id: v.id, name: v.name, language: v.language };
+      });
+    // Here in console there are list of voices available for android and ios
+    // But here the voice is set as per iOS
+    // Selection is based as per language en-US
+    // TODO: In future needs to get set for android also.
+    // console.log(voices);
+
+    let selectedVoice = null;
+
+    // voices[9] - {"id": "com.apple.ttsbundle.Samantha-compact", "language": "en-US", "name": "Samantha", "quality": 300}
+    if (voices && voices.length > 0) {
+      selectedVoice = voices[9].id;
+      try {
+        await Tts.setDefaultLanguage(voices[9].language);
+      } catch (err) {
+        console.log(`setDefaultLanguage error `, err);
+      }
+      await Tts.setDefaultVoice(voices[9].id);
+      this.setState({
+        voices: availableVoices,
+        selectedVoice,
+        ttsStatus: 'initialized',
+      });
+    } else {
+      this.setState({ ttsStatus: 'initialized' });
+    }
+  };
+  readText = async (text) => {
+    Tts.stop();
+    Tts.speak(text);
   };
 
   render() {
