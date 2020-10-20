@@ -14,7 +14,6 @@ import { Data } from './MockData';
 import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
-import { event } from 'react-native-reanimated';
 
 export default class HomeScreen extends Component {
   constructor(props) {
