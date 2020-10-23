@@ -14,6 +14,7 @@ import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
 import Voice from '@react-native-community/voice';
+import Tts from 'react-native-tts';
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -27,7 +28,18 @@ export default class RecipeScreen extends Component {
       timerReset: '0',
       currentIngStep: 0,
       currentRecStep: 0,
+      // TTS : Text speech settings
+      speechRate: 0.5,
+      speechPitch: 1,
+      text: ' ',
+      voices: [],
+      ttsStatus: 'initiliazing',
+      selectedVoice: null,
     };
+  }
+
+  async componentDidMount() {
+    // Event Listners for speech-to-text
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
     Voice.onSpeechEnd = this.onSpeechEnd;
@@ -35,10 +47,16 @@ export default class RecipeScreen extends Component {
     Voice.onSpeechResults = this.onSpeechResults;
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-  }
 
-  async componentDidMount() {
     this.startRecognizing();
+
+    // Event Listners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
   componentWillUnmount() {
@@ -224,6 +242,44 @@ export default class RecipeScreen extends Component {
     } else {
       null;
     }
+  };
+
+  initTts = async () => {
+    const voices = await Tts.voices();
+    const availableVoices = voices
+      .filter((v) => !v.networkConnectionRequired && !v.notInstalled)
+      .map((v) => {
+        return { id: v.id, name: v.name, language: v.language };
+      });
+    // Here in console there are list of voices available for android and ios
+    // But here the voice is set as per iOS
+    // Selection is based as per language en-US
+    // TODO: In future needs to get set for android also.
+    // console.log(voices);
+
+    let selectedVoice = null;
+
+    // voices[9] - {"id": "com.apple.ttsbundle.Samantha-compact", "language": "en-US", "name": "Samantha", "quality": 300}
+    if (voices && voices.length > 0) {
+      selectedVoice = voices[9].id;
+      try {
+        await Tts.setDefaultLanguage(voices[9].language);
+      } catch (err) {
+        console.log(`setDefaultLanguage error `, err);
+      }
+      await Tts.setDefaultVoice(voices[9].id);
+      this.setState({
+        voices: availableVoices,
+        selectedVoice,
+        ttsStatus: 'initialized',
+      });
+    } else {
+      this.setState({ ttsStatus: 'initialized' });
+    }
+  };
+  readText = async (text) => {
+    Tts.stop();
+    Tts.speak(text);
   };
 
   render() {

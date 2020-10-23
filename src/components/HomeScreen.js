@@ -20,29 +20,14 @@ export default class HomeScreen extends Component {
     super(props);
     this.state = {
       dishSelected: '',
+      // TTS : Text speech settings
       speechRate: 0.5,
       speechPitch: 1,
-      text: 'This is an example text',
+      text: ' ',
       voices: [],
       ttsStatus: 'initiliazing',
       selectedVoice: null,
     };
-    // Event Listners for speech-to-text
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-
-    // Event Listners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => console.log('start', event));
-    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
-    Tts.setDefaultRate(this.state.speechRate);
-    Tts.setDefaultPitch(this.state.speechPitch);
-    Tts.getInitStatus().then(this.initTts);
   }
 
   buttonPressed = async (title) => {
@@ -59,7 +44,24 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    // Event Listners for speech-to-text
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
+
     this.startRecognizing();
+
+    // Event Listners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
   async componentWillUnmount() {
