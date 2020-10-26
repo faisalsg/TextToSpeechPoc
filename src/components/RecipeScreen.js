@@ -29,7 +29,7 @@ export default class RecipeScreen extends Component {
       currentIngStep: 0,
       currentRecStep: 0,
       // TTS : Text speech settings
-      speechRate: 0.5,
+      speechRate: 0.45,
       speechPitch: 1,
       text: ' ',
       voices: [],
@@ -52,7 +52,9 @@ export default class RecipeScreen extends Component {
 
     // Event Listners for speech-to-text
     Tts.addEventListener('tts-start', (event) => console.log('start', event));
-    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-finish', (event) => {
+      this.nextStep();
+    });
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
     Tts.setDefaultPitch(this.state.speechPitch);
@@ -196,6 +198,14 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep - 1,
           });
+      this.setState(
+        {
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === 0
         ? this.setState({
@@ -205,12 +215,26 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep - 1,
           });
+      this.setState(
+        {
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
       // if at last step then move to recipe step
     } else {
-      this.setState({
-        currentRecStep: 0,
-        step: Enums.three,
-      });
+      this.setState(
+        {
+          currentRecStep: 0,
+          step: Enums.three,
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     }
   };
 
@@ -218,9 +242,15 @@ export default class RecipeScreen extends Component {
     console.log('forw');
     // if at step 0 will again be at step 0
     if (this.state.step === Enums.one) {
-      this.setState({
-        step: Enums.two,
-      });
+      this.setState(
+        {
+          step: Enums.two,
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.two) {
       this.state.currentIngStep === RecipeData.ingred.length - 1
         ? this.setState({
@@ -230,6 +260,14 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep + 1,
           });
+      this.setState(
+        {
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === RecipeData.recipe.length - 1
         ? this.setState({
@@ -238,6 +276,14 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep + 1,
           });
+      this.setState(
+        {
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
       // if at last step then do nothing
     } else {
       null;
@@ -283,6 +329,7 @@ export default class RecipeScreen extends Component {
   };
 
   render() {
+    console.log(this.state.text);
     return (
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
@@ -298,6 +345,7 @@ export default class RecipeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
+                Tts.stop();
                 this.startRecognizing();
               }}
             >
@@ -391,11 +439,12 @@ export default class RecipeScreen extends Component {
   };
   getContent = () => {
     if (this.state.step === Enums.one) {
-      if (this.state.countDownStart === 0) {
+      if (this.state.countDownStart === 3) {
         this.setState({
           step: Enums.two,
         });
         this.toggleTimer();
+        this.readText(RecipeData.ingred[this.state.currentIngStep].step);
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
