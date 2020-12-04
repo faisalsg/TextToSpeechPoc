@@ -21,11 +21,11 @@ export default class HomeScreen extends Component {
     this.state = {
       dishSelected: '',
       // TTS : Text speech settings
-      speechRate: 0.5,
+      speechRate: 0.42,
       speechPitch: 1,
       text: ' ',
       voices: [],
-      ttsStatus: 'initiliazing',
+      ttsStatus: 'initializing',
       selectedVoice: null,
     };
   }
@@ -44,7 +44,7 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    // Event Listners for speech-to-text
+    // Event Listeners for speech-to-text
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
     Voice.onSpeechEnd = this.onSpeechEnd;
@@ -55,8 +55,11 @@ export default class HomeScreen extends Component {
 
     this.startRecognizing();
 
-    // Event Listners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    // Event Listeners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => {
+      this.destroyRecognizer();
+      Voice.destroy().then(Voice.removeAllListeners);
+    });
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
@@ -127,14 +130,10 @@ export default class HomeScreen extends Component {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
-      latestArray.lastIndexOf('hey Alexa') ||
-      latestArray.lastIndexOf('Hey Alexa');
-    if (
-      latestArray.includes('hey Alexa') ||
-      latestArray.includes('Hey Alexa')
-    ) {
+      latestArray.lastIndexOf('hey app') || latestArray.lastIndexOf('Hey app');
+    if (latestArray.includes('hey app') || latestArray.includes('Hey app')) {
       const question = latestArray
-        .substring(indexOfTrigger + 9, latestArray.length)
+        .substring(indexOfTrigger + 7, latestArray.length)
         .toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);

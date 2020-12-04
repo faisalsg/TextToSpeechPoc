@@ -5,9 +5,9 @@ const Texts = {
   qusOne: 'what is your name',
   qusTwo: 'from where you are',
   qusThree: 'tell me something about you',
-  recepieOneTitle: 'Honey and macadamia breakfast loaf',
-  recepieTwoTitle: 'Fish and chips',
-  recepieThreeTitle: 'BBQ butter chicken',
+  recipeOneTitle: 'Honey and macadamia breakfast loaf',
+  recipeTwoTitle: 'Fish and chips',
+  recipeThreeTitle: 'BBQ butter chicken',
   selectDish: 'Please select a dish:',
   letsPrepare: "Let's prepare",
   ingredients: 'Ingredients',
@@ -22,6 +22,31 @@ const Texts = {
   previous: 'previous',
   mainMenu: 'main menu',
   homeScreen: 'home screen',
+  ovenTemp: 'oven temperature',
+  changeTimer: 'change timer',
+  setTimer: 'set timer',
+  timeLeft: 'time is left',
+  timeRemaining: 'time is remaining',
+  howMuch: 'how much',
+  quantity: 'quantity',
+
+  // ingredients QA
+  milk: 'milk',
+  honey: 'honey',
+  unsaltedButter: 'butter',
+  flour: 'flour',
+  sugar: 'sugar',
+  orange: 'orange',
+  clementine: 'clementine',
+  cinnamon: 'cinnamon',
+  nutmeg: 'nutmeg',
+  dates: 'dates',
+  macadamiaNuts: 'macadamia nuts',
+  eggs: 'eggs',
+  nuts: 'nuts',
+  topping: 'topping',
+  demerara: 'demerara',
+  sugar: 'sugar',
 };
 
 const RecipeOne = {
@@ -37,7 +62,7 @@ const RecipeOne = {
     nine: '1 teaspoon of ground nutmeg',
     ten: '200g of medjool dates, pitted and roughly cut',
     eleven: '130g of macadamia nuts',
-    tweleve: '2 eggs',
+    twelve: '2 eggs',
     thirteen: '50g of macadamia nuts for the topping',
     fourteen: '2 tablespoons of demerara sugar for the topping',
   },
@@ -57,6 +82,7 @@ const RecipeOne = {
     eleven:
       'Open the oven and rotate the cake for an even bake, then leave for a further 20-25 minutes. It should feel lovely and bouncy when you press it',
   },
+  temp: 'Heat the oven to 180 degree',
 };
 
 module.exports = {

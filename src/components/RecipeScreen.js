@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { Texts } from '../util/constants/Strings';
+import { RecipeOne, Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
@@ -29,17 +29,18 @@ export default class RecipeScreen extends Component {
       currentIngStep: 0,
       currentRecStep: 0,
       // TTS : Text speech settings
-      speechRate: 0.45,
+      speechRate: 0.42,
       speechPitch: 1,
       text: ' ',
       voices: [],
-      ttsStatus: 'initiliazing',
+      ttsStatus: 'initializing',
       selectedVoice: null,
+      remTimeCounter: 0,
     };
   }
 
   async componentDidMount() {
-    // Event Listners for speech-to-text
+    // Event Listeners for speech-to-text
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
     Voice.onSpeechEnd = this.onSpeechEnd;
@@ -50,8 +51,11 @@ export default class RecipeScreen extends Component {
 
     this.startRecognizing();
 
-    // Event Listners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    // Event Listeners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => {
+      this.destroyRecognizer();
+      Voice.destroy().then(Voice.removeAllListeners);
+    });
     Tts.addEventListener('tts-finish', (event) => {
       this.nextStep();
     });
@@ -124,14 +128,10 @@ export default class RecipeScreen extends Component {
     console.log('onSpeechResults', e);
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
-      latestArray.lastIndexOf('hey Alexa') ||
-      latestArray.lastIndexOf('Hey Alexa');
-    if (
-      latestArray.includes('hey Alexa') ||
-      latestArray.includes('Hey Alexa')
-    ) {
+      latestArray.lastIndexOf('hey app') || latestArray.lastIndexOf('Hey app');
+    if (latestArray.includes('hey app') || latestArray.includes('Hey app')) {
       const question = latestArray
-        .substring(indexOfTrigger + 9, latestArray.length)
+        .substring(indexOfTrigger + 7, latestArray.length)
         .toLowerCase();
       // Action to play/pause the timer.
       if (
@@ -147,12 +147,19 @@ export default class RecipeScreen extends Component {
 
         // Action to next step
       } else if (question.includes(Texts.next)) {
+        Tts.stop();
+        this.setState({
+          text: ' ',
+        });
         this.nextStep();
 
         // Action to previous step
       } else if (question.includes(Texts.previous)) {
+        Tts.stop();
+        this.setState({
+          text: ' ',
+        });
         this.previousStep();
-
         // Move to home screen
       } else if (
         question.includes(Texts.mainMenu) ||
@@ -160,11 +167,82 @@ export default class RecipeScreen extends Component {
       ) {
         this.props.navigation.goBack();
 
+        // To know what should be the temperature of the oven
+      } else if (question.includes(Texts.ovenTemp)) {
+        this.readText(RecipeOne.temp);
+
+        // To set the timer according the user
+      } else if (
+        question.includes(Texts.changeTimer) ||
+        question.includes(Texts.setTimer)
+      ) {
+        let num = parseInt(question.replace(/[^0-9]/g, ''));
+        this.updateTimer(num);
+        this.readText('Timer is set');
+        // default action
+      } else if (
+        question.includes(Texts.changeTimer) ||
+        question.includes(Texts.setTimer)
+      ) {
+        let num = parseInt(question.replace(/[^0-9]/g, ''));
+        this.updateTimer(num);
+        this.readText(`Timer is set to ${num}`);
+        // To answer quantity related requirements
+      } else if (question.includes(Texts.quantity)) {
+        if (question.includes(Texts.milk)) {
+          this.readText(RecipeData.ingred[0].step);
+        } else if (question.includes(Texts.honey)) {
+          this.readText(RecipeData.ingred[1].step);
+        } else if (question.includes(Texts.unsaltedButter)) {
+          this.readText(RecipeData.ingred[2].step);
+        } else if (question.includes(Texts.flour)) {
+          this.readText(RecipeData.ingred[3].step);
+        } else if (question.includes(Texts.sugar)) {
+          this.readText(RecipeData.ingred[4].step);
+        } else if (question.includes(Texts.orange)) {
+          this.readText(RecipeData.ingred[5].step);
+        } else if (question.includes(Texts.clementine)) {
+          this.readText(RecipeData.ingred[6].step);
+        } else if (question.includes(Texts.cinnamon)) {
+          this.readText(RecipeData.ingred[7].step);
+        } else if (question.includes(Texts.nutmeg)) {
+          this.readText(RecipeData.ingred[8].step);
+        } else if (question.includes(Texts.dates)) {
+          this.readText(RecipeData.ingred[9].step);
+        } else if (question.includes(Texts.macadamiaNuts)) {
+          this.readText(RecipeData.ingred[10].step);
+        } else if (question.includes(Texts.eggs)) {
+          this.readText(RecipeData.ingred[11].step);
+        } else if (question.includes(Texts.topping)) {
+          this.readText(RecipeData.ingred[12].step);
+        } else if (
+          question.includes(Texts.demerara) ||
+          question.includes(Texts.sugar)
+        ) {
+          this.readText(RecipeData.ingred[13].step);
+          //
+        } else {
+          // do nothing
+        }
+        // To check how much time will be left
+      } else if (
+        question.includes(Texts.timeLeft) ||
+        question.includes(Texts.timeRemaining)
+      ) {
+        let remTime = this.state.totalDuration - this.state.remTimeCounter;
+        let result = this.secondsToHms(remTime);
+        this.readText(`${result} is left`);
         // default action
       } else {
         console.log('Not recognized');
       }
     }
+  };
+
+  updateTimer = (num) => {
+    this.setState({
+      totalDuration: num,
+    });
   };
 
   toggleTimer = () => {
@@ -180,13 +258,36 @@ export default class RecipeScreen extends Component {
       timerStart: true,
     });
   };
+  secondsToHms = (seconds) => {
+    if (!seconds) return '';
 
-  getFormattedTime = (time) => {
-    this.currentTime = time;
+    let duration = seconds;
+    let hours = duration / 3600;
+    duration = duration % 3600;
+
+    let min = parseInt(duration / 60);
+    duration = duration % 60;
+
+    let sec = parseInt(duration);
+
+    if (sec < 10) {
+      sec = `0${sec}`;
+    }
+    if (min < 10) {
+      min = `0${min}`;
+    }
+
+    if (parseInt(hours, 10) > 0) {
+      return `${parseInt(hours, 10)}hours ${min}minutes ${sec}seconds`;
+    } else if (min == 0) {
+      return `${sec}seconds`;
+    } else {
+      return `${min}minutes ${sec}seconds`;
+    }
   };
 
   previousStep = () => {
-    console.log('Back');
+    Tts.stop();
     // if at step 0 do nothing
     if (this.state.step === Enums.one) {
       null;
@@ -239,7 +340,7 @@ export default class RecipeScreen extends Component {
   };
 
   nextStep = () => {
-    console.log('forw');
+    Tts.stop();
     // if at step 0 will again be at step 0
     if (this.state.step === Enums.one) {
       this.setState(
@@ -323,6 +424,7 @@ export default class RecipeScreen extends Component {
       this.setState({ ttsStatus: 'initialized' });
     }
   };
+
   readText = async (text) => {
     Tts.stop();
     Tts.speak(text);
@@ -394,6 +496,11 @@ export default class RecipeScreen extends Component {
           size={20}
           running={this.state.timerStart}
           showSeparator
+          onChange={() => {
+            this.setState({
+              remTimeCounter: this.state.remTimeCounter + 1,
+            });
+          }}
         />
         <View style={{ flexDirection: 'row' }}>
           <CustomMainButton
@@ -468,6 +575,7 @@ export default class RecipeScreen extends Component {
       return Texts.completed;
     }
   };
+
   getImage = () => {
     let dish = this.props.route.params.value;
     if (Data[0].title === dish) {
