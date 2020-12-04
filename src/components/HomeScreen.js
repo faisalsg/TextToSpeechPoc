@@ -1,3 +1,5 @@
+// This is home screen of the app from where we can basically select between the dishes
+
 import React, { Component } from 'react';
 import {
   StyleSheet,

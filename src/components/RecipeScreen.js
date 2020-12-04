@@ -1,3 +1,5 @@
+// This is the recipe screen from which we can control the steps, timer and 
+// other cooking related commands
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -172,21 +174,15 @@ export default class RecipeScreen extends Component {
         this.readText(RecipeOne.temp);
 
         // To set the timer according the user
-      } else if (
-        question.includes(Texts.changeTimer) ||
-        question.includes(Texts.setTimer)
-      ) {
-        let num = parseInt(question.replace(/[^0-9]/g, ''));
-        this.updateTimer(num);
-        this.readText('Timer is set');
-        // default action
-      } else if (
-        question.includes(Texts.changeTimer) ||
-        question.includes(Texts.setTimer)
-      ) {
-        let num = parseInt(question.replace(/[^0-9]/g, ''));
-        this.updateTimer(num);
-        this.readText(`Timer is set to ${num}`);
+      }
+        // TODO: this part is not working right now
+        // } else if (
+        //   question.includes(Texts.changeTimer) ||
+        //   question.includes(Texts.setTimer)
+        // ) {
+        //   let num = parseInt(question.replace(/[^0-9]/g, ''));
+        //   this.updateTimer(num);
+        //   this.readText(`Timer is set to ${num}`);
         // To answer quantity related requirements
       } else if (question.includes(Texts.quantity)) {
         if (question.includes(Texts.milk)) {
