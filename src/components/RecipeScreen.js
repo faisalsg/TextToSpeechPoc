@@ -22,6 +22,7 @@ export default class RecipeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      results: ' ',
       dishSelected: '',
       step: 1,
       countDownStart: 3,
@@ -128,6 +129,9 @@ export default class RecipeScreen extends Component {
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
+    this.setState({
+      results: e.value,
+    });
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
       latestArray.lastIndexOf('hey app') || latestArray.lastIndexOf('Hey app');
@@ -433,12 +437,15 @@ export default class RecipeScreen extends Component {
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>{Texts.letsPrepare}</Text>
           <Text
-            style={{
-              ...styles.headingText,
-              ...styles.subHeadingText,
-            }}
+            style={
+              {
+                // ...styles.headingText,
+                // ...styles.subHeadingText,
+              }
+            }
           >
-            {this.props.route.params.value}
+            {/* {this.props.route.params.value} */}
+            {this.state.results}
           </Text>
           <View style={styles.micContainer}>
             <TouchableOpacity
