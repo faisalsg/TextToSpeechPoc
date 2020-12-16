@@ -135,10 +135,22 @@ export default class HomeScreen extends Component {
     });
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
-      latestArray.lastIndexOf('hey app') || latestArray.lastIndexOf('Hey app');
-    if (latestArray.includes('hey app') || latestArray.includes('Hey app')) {
+      latestArray.lastIndexOf('hello clove') ||
+      latestArray.lastIndexOf('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove');
+    if (
+      latestArray.includes('hello clove') ||
+      latestArray.includes('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove')
+    ) {
       const question = latestArray
-        .substring(indexOfTrigger + 7, latestArray.length)
+        .substring(indexOfTrigger + 11, latestArray.length)
         .toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);
