@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableHighlight,
+  NativeModules
 } from 'react-native';
 
 import Voice from '@react-native-community/voice';
