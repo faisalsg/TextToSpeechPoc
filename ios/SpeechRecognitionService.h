@@ -1,0 +1,19 @@
+//
+//  SpeechRecognitionServiceVC.h
+//  AlexaPoc
+//
+//  Created by Shruti on 4/13/21.
+//
+
+#import <Foundation/Foundation.h>
+
+typedef void (^SpeechRecognitionCompletionHandler)(id object);
+
+@interface SpeechRecognitionService : NSObject
+
++ (instancetype) sharedInstance;
+
+- (void) processAudioData:(NSData *) audioData
+           withCompletion:(SpeechRecognitionCompletionHandler) completion;
+
+@end
