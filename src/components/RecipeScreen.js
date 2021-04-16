@@ -1,3 +1,5 @@
+// This is the recipe screen from which we can control the steps, timer and
+// other cooking related commands
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -7,18 +9,20 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { Texts } from '../util/constants/Strings';
+import { RecipeOne, Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
 import Voice from '@react-native-community/voice';
+import Tts from 'react-native-tts';
 
 export default class RecipeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      results: ' ',
       dishSelected: '',
       step: 1,
       countDownStart: 3,
@@ -27,7 +31,19 @@ export default class RecipeScreen extends Component {
       timerReset: '0',
       currentIngStep: 0,
       currentRecStep: 0,
+      // TTS : Text speech settings
+      speechRate: 0.42,
+      speechPitch: 1,
+      text: ' ',
+      voices: [],
+      ttsStatus: 'initializing',
+      selectedVoice: null,
+      remTimeCounter: 0,
     };
+  }
+
+  async componentDidMount() {
+    // Event Listeners for speech-to-text
     Voice.onSpeechStart = this.onSpeechStart;
     Voice.onSpeechRecognized = this.onSpeechRecognized;
     Voice.onSpeechEnd = this.onSpeechEnd;
@@ -35,10 +51,21 @@ export default class RecipeScreen extends Component {
     Voice.onSpeechResults = this.onSpeechResults;
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-  }
 
-  async componentDidMount() {
     this.startRecognizing();
+
+    // Event Listeners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => {
+      this.destroyRecognizer();
+      Voice.destroy().then(Voice.removeAllListeners);
+    });
+    Tts.addEventListener('tts-finish', (event) => {
+      this.nextStep();
+    });
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
   componentWillUnmount() {
@@ -102,16 +129,27 @@ export default class RecipeScreen extends Component {
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
+    this.setState({
+      results: e.value,
+    });
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
-      latestArray.lastIndexOf('hey Alexa') ||
-      latestArray.lastIndexOf('Hey Alexa');
+      latestArray.lastIndexOf('hello clove') ||
+      latestArray.lastIndexOf('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove');
     if (
-      latestArray.includes('hey Alexa') ||
-      latestArray.includes('Hey Alexa')
+      latestArray.includes('hello clove') ||
+      latestArray.includes('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove')
     ) {
       const question = latestArray
-        .substring(indexOfTrigger + 9, latestArray.length)
+        .substring(indexOfTrigger + 11, latestArray.length)
         .toLowerCase();
       // Action to play/pause the timer.
       if (
@@ -127,12 +165,19 @@ export default class RecipeScreen extends Component {
 
         // Action to next step
       } else if (question.includes(Texts.next)) {
+        Tts.stop();
+        this.setState({
+          text: ' ',
+        });
         this.nextStep();
 
         // Action to previous step
       } else if (question.includes(Texts.previous)) {
+        Tts.stop();
+        this.setState({
+          text: ' ',
+        });
         this.previousStep();
-
         // Move to home screen
       } else if (
         question.includes(Texts.mainMenu) ||
@@ -140,11 +185,76 @@ export default class RecipeScreen extends Component {
       ) {
         this.props.navigation.goBack();
 
+        // To know what should be the temperature of the oven
+      } else if (question.includes(Texts.ovenTemp)) {
+        this.readText(RecipeOne.temp);
+
+        // To set the timer according the user
+        // TODO: this part is not working right now
+        // } else if (
+        //   question.includes(Texts.changeTimer) ||
+        //   question.includes(Texts.setTimer)
+        // ) {
+        //   let num = parseInt(question.replace(/[^0-9]/g, ''));
+        //   this.updateTimer(num);
+        //   this.readText(`Timer is set to ${num}`);
+
+        // To answer quantity related requirements
+      } else if (question.includes(Texts.quantity)) {
+        if (question.includes(Texts.milk)) {
+          this.readText(RecipeData.ingred[0].step);
+        } else if (question.includes(Texts.honey)) {
+          this.readText(RecipeData.ingred[1].step);
+        } else if (question.includes(Texts.unsaltedButter)) {
+          this.readText(RecipeData.ingred[2].step);
+        } else if (question.includes(Texts.flour)) {
+          this.readText(RecipeData.ingred[3].step);
+        } else if (question.includes(Texts.sugar)) {
+          this.readText(RecipeData.ingred[4].step);
+        } else if (question.includes(Texts.orange)) {
+          this.readText(RecipeData.ingred[5].step);
+        } else if (question.includes(Texts.clementine)) {
+          this.readText(RecipeData.ingred[6].step);
+        } else if (question.includes(Texts.cinnamon)) {
+          this.readText(RecipeData.ingred[7].step);
+        } else if (question.includes(Texts.nutmeg)) {
+          this.readText(RecipeData.ingred[8].step);
+        } else if (question.includes(Texts.dates)) {
+          this.readText(RecipeData.ingred[9].step);
+        } else if (question.includes(Texts.macadamiaNuts)) {
+          this.readText(RecipeData.ingred[10].step);
+        } else if (question.includes(Texts.eggs)) {
+          this.readText(RecipeData.ingred[11].step);
+        } else if (question.includes(Texts.topping)) {
+          this.readText(RecipeData.ingred[12].step);
+        } else if (
+          question.includes(Texts.demerara) ||
+          question.includes(Texts.sugar)
+        ) {
+          this.readText(RecipeData.ingred[13].step);
+          //
+        } else {
+          // do nothing
+        }
+        // To check how much time will be left
+      } else if (
+        question.includes(Texts.timeLeft) ||
+        question.includes(Texts.timeRemaining)
+      ) {
+        let remTime = this.state.totalDuration - this.state.remTimeCounter;
+        let result = this.secondsToHms(remTime);
+        this.readText(`${result} is left`);
         // default action
       } else {
         console.log('Not recognized');
       }
     }
+  };
+
+  updateTimer = (num) => {
+    this.setState({
+      totalDuration: num,
+    });
   };
 
   toggleTimer = () => {
@@ -160,13 +270,36 @@ export default class RecipeScreen extends Component {
       timerStart: true,
     });
   };
+  secondsToHms = (seconds) => {
+    if (!seconds) return '';
 
-  getFormattedTime = (time) => {
-    this.currentTime = time;
+    let duration = seconds;
+    let hours = duration / 3600;
+    duration = duration % 3600;
+
+    let min = parseInt(duration / 60);
+    duration = duration % 60;
+
+    let sec = parseInt(duration);
+
+    if (sec < 10) {
+      sec = `0${sec}`;
+    }
+    if (min < 10) {
+      min = `0${min}`;
+    }
+
+    if (parseInt(hours, 10) > 0) {
+      return `${parseInt(hours, 10)}hours ${min}minutes ${sec}seconds`;
+    } else if (min == 0) {
+      return `${sec}seconds`;
+    } else {
+      return `${min}minutes ${sec}seconds`;
+    }
   };
 
   previousStep = () => {
-    console.log('Back');
+    Tts.stop();
     // if at step 0 do nothing
     if (this.state.step === Enums.one) {
       null;
@@ -178,6 +311,14 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep - 1,
           });
+      this.setState(
+        {
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === 0
         ? this.setState({
@@ -187,22 +328,42 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep - 1,
           });
+      this.setState(
+        {
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
       // if at last step then move to recipe step
     } else {
-      this.setState({
-        currentRecStep: 0,
-        step: Enums.three,
-      });
+      this.setState(
+        {
+          currentRecStep: 0,
+          step: Enums.three,
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     }
   };
 
   nextStep = () => {
-    console.log('forw');
+    Tts.stop();
     // if at step 0 will again be at step 0
     if (this.state.step === Enums.one) {
-      this.setState({
-        step: Enums.two,
-      });
+      this.setState(
+        {
+          step: Enums.two,
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.two) {
       this.state.currentIngStep === RecipeData.ingred.length - 1
         ? this.setState({
@@ -212,6 +373,14 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep + 1,
           });
+      this.setState(
+        {
+          text: RecipeData.ingred[this.state.currentIngStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === RecipeData.recipe.length - 1
         ? this.setState({
@@ -220,28 +389,80 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep + 1,
           });
+      this.setState(
+        {
+          text: RecipeData.recipe[this.state.currentRecStep].step,
+        },
+        () => {
+          this.readText(this.state.text);
+        }
+      );
       // if at last step then do nothing
     } else {
       null;
     }
   };
 
+  initTts = async () => {
+    const voices = await Tts.voices();
+    const availableVoices = voices
+      .filter((v) => !v.networkConnectionRequired && !v.notInstalled)
+      .map((v) => {
+        return { id: v.id, name: v.name, language: v.language };
+      });
+    // Here in console there are list of voices available for android and ios
+    // But here the voice is set as per iOS
+    // Selection is based as per language en-US
+    // TODO: In future needs to get set for android also.
+    // console.log(voices);
+
+    let selectedVoice = null;
+
+    // voices[9] - {"id": "com.apple.ttsbundle.Samantha-compact", "language": "en-US", "name": "Samantha", "quality": 300}
+    if (voices && voices.length > 0) {
+      selectedVoice = voices[9].id;
+      try {
+        await Tts.setDefaultLanguage(voices[9].language);
+      } catch (err) {
+        console.log(`setDefaultLanguage error `, err);
+      }
+      await Tts.setDefaultVoice(voices[9].id);
+      this.setState({
+        voices: availableVoices,
+        selectedVoice,
+        ttsStatus: 'initialized',
+      });
+    } else {
+      this.setState({ ttsStatus: 'initialized' });
+    }
+  };
+
+  readText = async (text) => {
+    Tts.stop();
+    Tts.speak(text);
+  };
+
   render() {
+    console.log(this.state.text);
     return (
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>{Texts.letsPrepare}</Text>
           <Text
-            style={{
-              ...styles.headingText,
-              ...styles.subHeadingText,
-            }}
+            style={
+              {
+                // ...styles.headingText,
+                // ...styles.subHeadingText,
+              }
+            }
           >
-            {this.props.route.params.value}
+            {/* {this.props.route.params.value} */}
+            {this.state.results}
           </Text>
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
+                Tts.stop();
                 this.startRecognizing();
               }}
             >
@@ -290,6 +511,11 @@ export default class RecipeScreen extends Component {
           size={20}
           running={this.state.timerStart}
           showSeparator
+          onChange={() => {
+            this.setState({
+              remTimeCounter: this.state.remTimeCounter + 1,
+            });
+          }}
         />
         <View style={{ flexDirection: 'row' }}>
           <CustomMainButton
@@ -335,11 +561,12 @@ export default class RecipeScreen extends Component {
   };
   getContent = () => {
     if (this.state.step === Enums.one) {
-      if (this.state.countDownStart === 0) {
+      if (this.state.countDownStart === 3) {
         this.setState({
           step: Enums.two,
         });
         this.toggleTimer();
+        this.readText(RecipeData.ingred[this.state.currentIngStep].step);
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
@@ -363,6 +590,7 @@ export default class RecipeScreen extends Component {
       return Texts.completed;
     }
   };
+
   getImage = () => {
     let dish = this.props.route.params.value;
     if (Data[0].title === dish) {

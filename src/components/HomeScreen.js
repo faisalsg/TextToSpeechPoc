@@ -1,3 +1,5 @@
+// This is home screen of the app from where we can basically select between the dishes
+
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -6,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  NativeModules,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
@@ -14,37 +17,25 @@ import { Data } from './MockData';
 import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
-import { event } from 'react-native-reanimated';
+
+const {GoogleSpeechManager} = NativeModules;
 
 export default class HomeScreen extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
       dishSelected: '',
-      speechRate: 0.5,
+      // TTS : Text speech settings
+      speechRate: 0.42,
       speechPitch: 1,
-      text: 'This is an example text',
+      text: ' ',
       voices: [],
-      ttsStatus: 'initiliazing',
+      ttsStatus: 'initializing',
       selectedVoice: null,
     };
-    // Event Listners for speech-to-text
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-
-    // Event Listners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => console.log('start', event));
-    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
-    Tts.setDefaultRate(this.state.speechRate);
-    Tts.setDefaultPitch(this.state.speechPitch);
-    Tts.getInitStatus().then(this.initTts);
   }
+
 
   buttonPressed = async (title) => {
     await this.readText(title);
@@ -60,7 +51,27 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    // Event Listeners for speech-to-text
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
+
     this.startRecognizing();
+
+    // Event Listeners for speech-to-text
+    Tts.addEventListener('tts-start', (event) => {
+      this.destroyRecognizer();
+      Voice.destroy().then(Voice.removeAllListeners);
+    });
+    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
+    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
   async componentWillUnmount() {
@@ -69,15 +80,20 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
-    this.setState({
-      result: ' ',
-    });
 
-    try {
-      await Voice.start('en_US');
-    } catch (e) {
-      console.error(e);
-    }
+    console.warn("called")
+    GoogleSpeechManager.createCalendarEvent('testName', 'testLocation', eventId => {
+      console.log(`Created a new event with id ${eventId}`);
+    });
+    // this.setState({
+    //   result: ' ',
+    // });
+
+    // try {
+    //   await Voice.start('en_US');
+    // } catch (e) {
+    //   console.error(e);
+    // }
   }
 
   async destroyRecognizer() {
@@ -124,16 +140,27 @@ export default class HomeScreen extends Component {
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
+    this.setState({
+      results: e.value,
+    });
     const latestArray = e.value[e.value.length - 1];
     const indexOfTrigger =
-      latestArray.lastIndexOf('hey Alexa') ||
-      latestArray.lastIndexOf('Hey Alexa');
+      latestArray.lastIndexOf('hello clove') ||
+      latestArray.lastIndexOf('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove');
     if (
-      latestArray.includes('hey Alexa') ||
-      latestArray.includes('Hey Alexa')
+      latestArray.includes('hello clove') ||
+      latestArray.includes('Hello clove') ||
+      latestArray.includes('hello close') ||
+      latestArray.includes('Hello close') ||
+      latestArray.includes('hello glove') ||
+      latestArray.includes('Hello glove')
     ) {
       const question = latestArray
-        .substring(indexOfTrigger + 9, latestArray.length)
+        .substring(indexOfTrigger + 11, latestArray.length)
         .toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);
@@ -190,6 +217,17 @@ export default class HomeScreen extends Component {
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>{Texts.clove}</Text>
+          <Text
+            style={
+              {
+                // ...styles.headingText,
+                // ...styles.subHeadingText,
+              }
+            }
+          >
+            {/* {this.props.route.params.value} */}
+            {this.state.results}
+          </Text>
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {

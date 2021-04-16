@@ -3,13 +3,13 @@ import { Texts, RecipeOne } from '../util/constants/Strings';
 // Data that is associated with each dish
 export const Data = [
   {
-    title: Texts.recepieOneTitle,
+    title: Texts.recipeOneTitle,
   },
   {
-    title: Texts.recepieTwoTitle,
+    title: Texts.recipeTwoTitle,
   },
   {
-    title: Texts.recepieThreeTitle,
+    title: Texts.recipeThreeTitle,
   },
 ];
 
@@ -49,7 +49,7 @@ export const RecipeData = {
       step: RecipeOne.ingredients.eleven,
     },
     {
-      step: RecipeOne.ingredients.tweleve,
+      step: RecipeOne.ingredients.twelve,
     },
     {
       step: RecipeOne.ingredients.thirteen,

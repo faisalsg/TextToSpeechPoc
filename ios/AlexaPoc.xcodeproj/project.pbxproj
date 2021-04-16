@@ -19,6 +19,9 @@
 		39221295270FAF8AAA60D5E5 /* libPods-AlexaPoc-AlexaPocTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E779EB5F17BE03144CD450 /* libPods-AlexaPoc-AlexaPocTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9845E505C6E6B1677A0E1D2A /* libPods-AlexaPoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E38F7DDA03611F20E96B8D /* libPods-AlexaPoc.a */; };
+		9D824C07262740A2009D31EB /* AudioControllerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C06262740A2009D31EB /* AudioControllerVC.m */; };
+		9D824C0E262740EB009D31EB /* SpeechRecognitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */; };
+		9D824C5A262825D9009D31EB /* GoogleSpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C59262825D9009D31EB /* GoogleSpeechManager.m */; };
 		D28AE647A20223F130D2029C /* libPods-AlexaPoc-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527FDE6F052F9BB428D9CA8 /* libPods-AlexaPoc-tvOS.a */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +65,12 @@
 		6A855138297BD31041EEBA1A /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; sourceTree = "<group>"; };
 		6C457636ED62AE0130FFF01B /* Pods-AlexaPoc-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AlexaPoc/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9D824C05262740A2009D31EB /* AudioControllerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AudioControllerVC.h; path = AlexaPoc/AudioControllerVC.h; sourceTree = "<group>"; };
+		9D824C06262740A2009D31EB /* AudioControllerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AudioControllerVC.m; path = AlexaPoc/AudioControllerVC.m; sourceTree = "<group>"; };
+		9D824C0C262740EB009D31EB /* SpeechRecognitionService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechRecognitionService.h; sourceTree = "<group>"; };
+		9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechRecognitionService.m; sourceTree = "<group>"; };
+		9D824C58262825D9009D31EB /* GoogleSpeechManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleSpeechManager.h; sourceTree = "<group>"; };
+		9D824C59262825D9009D31EB /* GoogleSpeechManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleSpeechManager.m; sourceTree = "<group>"; };
 		A72503B447C4FC9E98F7A25E /* Pods-AlexaPoc-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		B0AE8E2C6AA4444CC1FDF06F /* Pods-AlexaPoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc.debug.xcconfig"; sourceTree = "<group>"; };
 		DDE8128DB2DD7591ACBEBD7D /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOSTests/Pods-AlexaPoc-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -125,6 +134,8 @@
 		13B07FAE1A68108700A75B9A /* AlexaPoc */ = {
 			isa = PBXGroup;
 			children = (
+				9D824C58262825D9009D31EB /* GoogleSpeechManager.h */,
+				9D824C59262825D9009D31EB /* GoogleSpeechManager.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -132,6 +143,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				9D824C05262740A2009D31EB /* AudioControllerVC.h */,
+				9D824C06262740A2009D31EB /* AudioControllerVC.m */,
+				9D824C0C262740EB009D31EB /* SpeechRecognitionService.h */,
+				9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */,
 			);
 			name = AlexaPoc;
 			sourceTree = "<group>";
@@ -465,10 +480,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -505,10 +522,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -569,7 +588,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				9D824C07262740A2009D31EB /* AudioControllerVC.m in Sources */,
+				9D824C5A262825D9009D31EB /* GoogleSpeechManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				9D824C0E262740EB009D31EB /* SpeechRecognitionService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
