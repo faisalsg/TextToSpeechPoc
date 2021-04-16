@@ -6,12 +6,23 @@
 //
 
 #import "SpeechRecognitionService.h"
-//#import "google/cloud/speech/v1/CloudSpeech.pbrpc.h"
+
 #import <GRPCClient/GRPCCall.h>
+#import <RxLibrary/GRXBufferedPipe.h>
 #import <ProtoRPC/ProtoRPC.h>
+
 
 #define API_KEY @"AIzaSyDi58Se2lF-lX1wto200_x79A5fgzlVqKg"
 #define HOST @"speech.googleapis.com"
+
+@interface SpeechRecognitionService ()
+
+@property (nonatomic, assign) BOOL streaming;
+//@property (nonatomic, strong) Speech *client;
+@property (nonatomic, strong) GRXBufferedPipe *writer;
+@property (nonatomic, strong) GRPCProtoCall *call;
+
+@end
 
 @implementation SpeechRecognitionService
 
@@ -19,58 +30,67 @@
   static SpeechRecognitionService *instance = nil;
   if (!instance) {
     instance = [[self alloc] init];
+    instance.sampleRate = 16000.0; // default value
   }
   return instance;
 }
 
-//- (void) processAudioData:(NSData *) audioData
-//           withCompletion:(SpeechRecognitionCompletionHandler)completion {
+//- (void) streamAudioData:(NSData *) audioData
+//          withCompletion:(SpeechRecognitionCompletionHandler)completion {
 //
-//  // construct a request for synchronous speech recognition
-//  RecognitionConfig *recognitionConfig = [RecognitionConfig message];
-//  recognitionConfig.encoding = RecognitionConfig_AudioEncoding_Linear16;
-//  recognitionConfig.sampleRateHertz = 16000;
-//  recognitionConfig.languageCode = @"en-US";
-//  recognitionConfig.maxAlternatives = 30;
+//  if (!_streaming) {
+//    // if we aren't already streaming, set up a gRPC connection
+//    _client = [[Speech alloc] initWithHost:HOST];
+//    _writer = [[GRXBufferedPipe alloc] init];
+//    _call = [_client RPCToStreamingRecognizeWithRequestsWriter:_writer
+//                                         eventHandler:^(BOOL done, StreamingRecognizeResponse *response, NSError *error) {
+//                                           completion(response, error);
+//                                         }];
 //
-//  RecognitionAudio *recognitionAudio = [RecognitionAudio message];
-//  recognitionAudio.content = audioData;
+//    // authenticate using an API key obtained from the Google Cloud Console
+//    _call.requestHeaders[@"X-Goog-Api-Key"] = API_KEY;
+//    // if the API key has a bundle ID restriction, specify the bundle ID like this
+//    _call.requestHeaders[@"X-Ios-Bundle-Identifier"] = [[NSBundle mainBundle] bundleIdentifier];
 //
-//  RecognizeRequest *recognizeRequest = [RecognizeRequest message];
-//  recognizeRequest.config = recognitionConfig;
-//  recognizeRequest.audio = recognitionAudio;
+//    NSLog(@"HEADERS: %@", _call.requestHeaders);
 //
-//  Speech *client = [[Speech alloc] initWithHost:HOST];
+//    [_call start];
+//    _streaming = YES;
 //
-//  // prepare a single gRPC call to make the request
-//  GRPCProtoCall *call = [client RPCToRecognizeWithRequest:recognizeRequest
-//                                                  handler:
-//                         ^(RecognizeResponse *response, NSError *error) {
-//                           NSLog(@"RESPONSE RECEIVED %@", response);
-//                           if (error) {
-//                             NSLog(@"ERROR: %@", error);
-//                             completion([error description]);
-//                           } else {
-//                             for (SpeechRecognitionResult *result in response.resultsArray) {
-//                               NSLog(@"RESULT");
-//                               for (SpeechRecognitionAlternative *alternative in result.alternativesArray) {
-//                                 NSLog(@"ALTERNATIVE %0.4f %@",
-//                                       alternative.confidence,
-//                                       alternative.transcript);
-//                               }
-//                             }
-//                             completion(response);
-//                           }
-//                         }];
+//    // send an initial request message to configure the service
+//    RecognitionConfig *recognitionConfig = [RecognitionConfig message];
+//    recognitionConfig.encoding = RecognitionConfig_AudioEncoding_Linear16;
+//    recognitionConfig.sampleRateHertz = self.sampleRate;
+//    recognitionConfig.languageCode = @"en-US";
+//    recognitionConfig.maxAlternatives = 30;
 //
-//  // authenticate using an API key obtained from the Google Cloud Console
-//  call.requestHeaders[@"X-Goog-Api-Key"] = API_KEY;
-//  // if the API key has a bundle ID restriction, specify the bundle ID like this
-//  call.requestHeaders[@"X-Ios-Bundle-Identifier"] = [[NSBundle mainBundle] bundleIdentifier];
-//  NSLog(@"HEADERS: %@", call.requestHeaders);
+//    StreamingRecognitionConfig *streamingRecognitionConfig = [StreamingRecognitionConfig message];
+//    streamingRecognitionConfig.config = recognitionConfig;
+//    streamingRecognitionConfig.singleUtterance = NO;
+//    streamingRecognitionConfig.interimResults = YES;
 //
-//  // perform the gRPC request
-//  [call start];
+//    StreamingRecognizeRequest *streamingRecognizeRequest = [StreamingRecognizeRequest message];
+//    streamingRecognizeRequest.streamingConfig = streamingRecognitionConfig;
+//
+//    [_writer writeValue:streamingRecognizeRequest];
+//  }
+//
+//  // send a request message containing the audio data
+//  StreamingRecognizeRequest *streamingRecognizeRequest = [StreamingRecognizeRequest message];
+//  streamingRecognizeRequest.audioContent = audioData;
+//  [_writer writeValue:streamingRecognizeRequest];
 //}
+
+- (void) stopStreaming {
+  if (!_streaming) {
+    return;
+  }
+  [_writer finishWithError:nil];
+  _streaming = NO;
+}
+
+- (BOOL) isStreaming {
+  return _streaming;
+}
 
 @end
