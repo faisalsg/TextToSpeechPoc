@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  NativeModules,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
@@ -17,7 +18,10 @@ import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
+const {GoogleSpeechManager} = NativeModules;
+
 export default class HomeScreen extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,6 +35,7 @@ export default class HomeScreen extends Component {
       selectedVoice: null,
     };
   }
+
 
   buttonPressed = async (title) => {
     await this.readText(title);
@@ -75,15 +80,20 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
-    this.setState({
-      result: ' ',
-    });
 
-    try {
-      await Voice.start('en_US');
-    } catch (e) {
-      console.error(e);
-    }
+    console.warn("called")
+    GoogleSpeechManager.createCalendarEvent('testName', 'testLocation', eventId => {
+      console.log(`Created a new event with id ${eventId}`);
+    });
+    // this.setState({
+    //   result: ' ',
+    // });
+
+    // try {
+    //   await Voice.start('en_US');
+    // } catch (e) {
+    //   console.error(e);
+    // }
   }
 
   async destroyRecognizer() {
