@@ -9,11 +9,19 @@
 
 typedef void (^SpeechRecognitionCompletionHandler)(id object);
 
+
 @interface SpeechRecognitionService : NSObject
 
 + (instancetype) sharedInstance;
 
-- (void) processAudioData:(NSData *) audioData
-           withCompletion:(SpeechRecognitionCompletionHandler) completion;
+- (void) streamAudioData:(NSData *) audioData
+          withCompletion:(SpeechRecognitionCompletionHandler)completion;
+
+- (void) stopStreaming;
+
+- (BOOL) isStreaming;
+
+@property (nonatomic, assign) double sampleRate;
 
 @end
+
