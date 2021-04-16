@@ -18,10 +18,22 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(createCalendarEvent:(NSString *)title location:(NSString *)location callback: (RCTResponseSenderBlock)callback)
 {
- NSInteger eventId = 234324;
- callback(@[@(eventId)]);
+  NSInteger eventId = 234324;
+  callback(@[@(eventId)]);
+  
+  RCTLogInfo(@"Pretending to create an event %@ at %@", title, location);
+}
 
- RCTLogInfo(@"Pretending to create an event %@ at %@", title, location);
+RCT_EXPORT_METHOD(startRecording)
+{
+  [[AudioControllerVC sharedInstance] prepare];
+  //  [[SpeechRecognitionService sharedInstance] setSampleRate:SAMPLE_RATE];
+  [[AudioControllerVC sharedInstance] start];
+}
+
+RCT_EXPORT_METHOD(stopRecording)
+{
+  [[AudioControllerVC sharedInstance] stop];
 }
 
 //+(void)startRecording{
