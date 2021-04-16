@@ -82,9 +82,8 @@ export default class HomeScreen extends Component {
   async startRecognizing() {
 
     console.warn("called")
-    GoogleSpeechManager.createCalendarEvent('testName', 'testLocation', eventId => {
-      console.log(`Created a new event with id ${eventId}`);
-    });
+    GoogleSpeechManager.startRecording();
+   
     // this.setState({
     //   result: ' ',
     // });
