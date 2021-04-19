@@ -117,6 +117,7 @@ export default class HomeScreen extends Component {
   onSpeechEnd = (e) => {
     console.log('onSpeechEnd', e);
     this.startRecognizing();
+    GoogleSpeechManager.stopRecording();
   };
 
   onSpeechError = (e) => {

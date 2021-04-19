@@ -12,12 +12,12 @@
 
 @interface AudioControllerVC (){
   AudioComponentInstance remoteIOUnit;
+  BOOL audioComponentInitialized;
 }
 
 @end
 
-@implementation AudioControllerVC: NSObject
-RCT_EXPORT_MODULE();
+@implementation AudioControllerVC
 
 + (instancetype) sharedInstance {
   static AudioControllerVC *instance = nil;
@@ -114,7 +114,7 @@ static OSStatus playbackCallback(void *inRefCon,
   return status;
 }
 
-- (OSStatus) prepare {
+- (OSStatus) prepareWithSampleRate:(double) specifiedSampleRate {
   OSStatus status = noErr;
 
   AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -135,22 +135,24 @@ static OSStatus playbackCallback(void *inRefCon,
   [session setPreferredIOBufferDuration:10 error:&error];
 
   double sampleRate = session.sampleRate;
-  NSLog (@"hardwareSampleRate = %f", sampleRate);
-  sampleRate = 16000;
+  NSLog (@"hardware sample rate = %f, using specified rate = %f", sampleRate, specifiedSampleRate);
+  sampleRate = specifiedSampleRate;
+  if (!audioComponentInitialized) {
+    audioComponentInitialized = YES;
+    // Describe the RemoteIO unit
+    AudioComponentDescription audioComponentDescription;
+    audioComponentDescription.componentType = kAudioUnitType_Output;
+    audioComponentDescription.componentSubType = kAudioUnitSubType_RemoteIO;
+    audioComponentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+    audioComponentDescription.componentFlags = 0;
+    audioComponentDescription.componentFlagsMask = 0;
 
-  // Describe the RemoteIO unit
-  AudioComponentDescription audioComponentDescription;
-  audioComponentDescription.componentType = kAudioUnitType_Output;
-  audioComponentDescription.componentSubType = kAudioUnitSubType_RemoteIO;
-  audioComponentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-  audioComponentDescription.componentFlags = 0;
-  audioComponentDescription.componentFlagsMask = 0;
-
-  // Get the RemoteIO unit
-  AudioComponent remoteIOComponent = AudioComponentFindNext(NULL,&audioComponentDescription);
-  status = AudioComponentInstanceNew(remoteIOComponent,&(self->remoteIOUnit));
-  if (CheckError(status, "Couldn't get RemoteIO unit instance")) {
-    return status;
+    // Get the RemoteIO unit
+    AudioComponent remoteIOComponent = AudioComponentFindNext(NULL,&audioComponentDescription);
+    status = AudioComponentInstanceNew(remoteIOComponent,&(self->remoteIOUnit));
+    if (CheckError(status, "Couldn't get RemoteIO unit instance")) {
+      return status;
+    }
   }
 
   UInt32 oneFlag = 1;
@@ -260,6 +262,5 @@ static OSStatus playbackCallback(void *inRefCon,
 - (OSStatus) stop {
   return AudioOutputUnitStop(self->remoteIOUnit);
 }
-
 
 @end
