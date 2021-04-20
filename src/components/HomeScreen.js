@@ -103,9 +103,9 @@ export default class HomeScreen extends Component {
 
   async getAudioResponse() {
     console.warn("see if called");
-    // GoogleSpeechManager.sendAudioResponse('', response => {
-    //   console.warn("Created a new response", response);
-    // });  
+    GoogleSpeechManager.sendAudioResponse('', response => {
+      console.warn("Created a new response", response);
+    });  
   }
 
   async destroyRecognizer() {
@@ -255,14 +255,13 @@ export default class HomeScreen extends Component {
           <View>
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
-          <View style={styles.buttonContainer}>
             <TouchableOpacity
+            style={styles.buttonContainer}
               onPress={() => {
                 this.getAudioResponse();
               }}
             >
             </TouchableOpacity>
-          </View>
           <View>
             {Data.map((value, index) => {
               return (
