@@ -5,19 +5,18 @@
 //  Created by Shruti on 4/13/21.
 //
 #import <AVFoundation/AVFoundation.h>
-
 #import "GoogleSpeechManager.h"
-#import "AudioControllerVC.h"
+#import "AudioController.h"
 #import "SpeechRecognitionService.h"
 #import <React/RCTLog.h>
-//#import <googleapis/CloudSpeech.pbobjc.h>
-
 #import "google/cloud/speech/v1/CloudSpeech.pbrpc.h"
 
 #define SAMPLE_RATE 16000.0f
 
-@interface GoogleSpeechManager () <AudioControllerDelegate>
+@interface GoogleSpeechManager ()<AudioControllerDelegate>
 @property (nonatomic, strong) NSMutableData *audioData;
+@property (nonatomic, strong) NSMutableArray *audioResponse;
+
 @end
 
 @implementation GoogleSpeechManager
@@ -26,22 +25,24 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(startRecording)
 {
+  [AudioController sharedInstance].delegate = self;
+
   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
   [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
 
   _audioData = [[NSMutableData alloc] init];
-  [[AudioControllerVC sharedInstance] prepareWithSampleRate:SAMPLE_RATE];
+  [[AudioController sharedInstance] prepare];
   [[SpeechRecognitionService sharedInstance] setSampleRate:SAMPLE_RATE];
-  [[AudioControllerVC sharedInstance] start];
+  [[AudioController sharedInstance] start];
 }
 
 RCT_EXPORT_METHOD(stopRecording)
 {
-  [[AudioControllerVC sharedInstance] stop];
+  [[AudioController sharedInstance] stop];
   [[SpeechRecognitionService sharedInstance] stopStreaming];
 }
 
-RCT_EXPORT_METHOD(processSampleData:(NSData *)data)
+- (void) processSampleData:(NSData *)data
 {
   [self.audioData appendData:data];
   NSInteger frameCount = [data length] / 2;
@@ -50,33 +51,38 @@ RCT_EXPORT_METHOD(processSampleData:(NSData *)data)
   for (int i = 0; i < frameCount; i++) {
     sum += abs(samples[i]);
   }
-  NSLog(@"audio %d %d", (int) frameCount, (int) (sum * 1.0 / frameCount));
-  
-  // We recommend sending samples in 100ms chunks
+
   int chunk_size = 0.1 /* seconds/chunk */ * SAMPLE_RATE * 2 /* bytes/sample */ ; /* bytes/chunk */
   
   if ([self.audioData length] > chunk_size) {
-    NSLog(@"SENDING");
     [[SpeechRecognitionService sharedInstance] streamAudioData:self.audioData
                                                 withCompletion:^(StreamingRecognizeResponse *response, NSError *error) {
       if (error) {
         NSLog(@"ERROR: %@", error);
-        //                                                    [[AudioControllerVC sharedInstance] stop];
+        [[AudioController sharedInstance] stop];
       } else if (response) {
         BOOL finished = NO;
-        NSLog(@"RESPONSE: %@", response);
+        NSLog(@"RESULT RESPONSE: %@", response.resultsArray);
+        self.audioResponse = response.resultsArray;
+
         for (StreamingRecognitionResult *result in response.resultsArray) {
           if (result.isFinal) {
             finished = YES;
           }
         }
         if (finished) {
-         // [self stopAudio:nil];
+          [[AudioController sharedInstance] stop];
         }
       }
     }
      ];
     self.audioData = [[NSMutableData alloc] init];
   }}
+
+RCT_EXPORT_METHOD(sendAudioResponse:(NSString *)title callback: (RCTResponseSenderBlock)callback)
+{
+ callback(self.audioResponse);
+ RCTLogInfo(@"Pretending to create an event %@ at", self.audioResponse);
+}
 
 @end

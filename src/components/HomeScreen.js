@@ -80,9 +80,11 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
-
-    console.warn("called")
+    console.warn('called');
     GoogleSpeechManager.startRecording();
+    GoogleSpeechManager.sendAudioResponse('testName', response => {
+      console.warn(`Created a new response ${response}`);
+    });
    
     // this.setState({
     //   result: ' ',
@@ -107,28 +109,28 @@ export default class HomeScreen extends Component {
   }
 
   onSpeechStart = (e) => {
-    console.log('onSpeechStart', e);
+    console.warn('onSpeechStart', e);
   };
 
   onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized', e);
+    console.warn('onSpeechRecognized', e);
   };
 
   onSpeechEnd = (e) => {
-    console.log('onSpeechEnd', e);
+    console.warn('onSpeechEnd', e);
     this.startRecognizing();
     GoogleSpeechManager.stopRecording();
   };
 
   onSpeechError = (e) => {
-    console.log('onSpeechError', e);
+    console.warn('onSpeechError', e);
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
 
   onSpeechPartialResults = (e) => {
-    console.log('onSpeechPartialResults: ', e);
+    console.warn('onSpeechPartialResults: ', e);
     this.setState({
       partialResults: e.value,
     });
@@ -139,7 +141,7 @@ export default class HomeScreen extends Component {
   };
 
   onSpeechResults = (e) => {
-    console.log('onSpeechResults', e);
+    console.warn('onSpeechResults', e);
     this.setState({
       results: e.value,
     });

@@ -13,13 +13,13 @@
 
 @end
 
-@interface AudioControllerVC : NSObject
+@interface AudioController : NSObject
 
 + (instancetype) sharedInstance;
-
+@property (nonatomic, strong) NSMutableData *audioData;
 @property (nonatomic, weak) id<AudioControllerDelegate> delegate;
 
-- (OSStatus) prepareWithSampleRate:(double) sampleRate;
+- (OSStatus) prepare;
 - (OSStatus) start;
 - (OSStatus) stop;
 

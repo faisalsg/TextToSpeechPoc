@@ -12,10 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GoogleSpeechManager : NSObject<RCTBridgeModule>
 
-+(void)startRecording;
-
-+(void)stopRecording;
-
 @end
 
 NS_ASSUME_NONNULL_END
