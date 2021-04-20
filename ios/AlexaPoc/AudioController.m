@@ -1,26 +1,36 @@
 //
-//  AudioControllerVC.m
-//  AlexaPoc
+// Copyright 2016 Google Inc. All Rights Reserved.
 //
-//  Created by Shruti on 4/13/21.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
-#import "AudioControllerVC.h"
-#import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import <React/RCTLog.h>
+#import "SpeechRecognitionService.h"
 
-@interface AudioControllerVC (){
+#import "AudioController.h"
+
+#define SAMPLE_RATE 16000.0f
+
+@interface AudioController () {
   AudioComponentInstance remoteIOUnit;
+  BOOL audioComponentInitialized;
 }
-
 @end
 
-@implementation AudioControllerVC: NSObject
-RCT_EXPORT_MODULE();
+@implementation AudioController
 
 + (instancetype) sharedInstance {
-  static AudioControllerVC *instance = nil;
+  static AudioController *instance = nil;
   if (!instance) {
     instance = [[self alloc] init];
   }
@@ -59,9 +69,8 @@ static OSStatus recordingCallback(void *inRefCon,
                                   AudioBufferList *ioData) {
   OSStatus status;
 
-  AudioControllerVC *audioController = (__bridge AudioControllerVC *) inRefCon;
-
-  int channelCount = 1;
+  AudioController *audioController = (__bridge AudioController *) inRefCon;
+    int channelCount = 1;
 
   // build the AudioBufferList structure
   AudioBufferList *bufferList = (AudioBufferList *) malloc (sizeof (AudioBufferList));
@@ -84,7 +93,7 @@ static OSStatus recordingCallback(void *inRefCon,
   NSData *data = [[NSData alloc] initWithBytes:bufferList->mBuffers[0].mData
                                         length:bufferList->mBuffers[0].mDataByteSize];
   dispatch_async(dispatch_get_main_queue(), ^{
-    [audioController.delegate processSampleData:data];
+  [audioController.delegate processSampleData:data];
   });
 
   return noErr;
@@ -101,7 +110,7 @@ static OSStatus playbackCallback(void *inRefCon,
   // Notes: ioData contains buffers (may be more than one!)
   // Fill them up as much as you can. Remember to set the size value in each buffer to match how
   // much data is in the buffer.
-  AudioControllerVC *audioController = (__bridge AudioControllerVC *) inRefCon;
+  AudioController *audioController = (__bridge AudioController *) inRefCon;
 
   UInt32 bus1 = 1;
   status = AudioUnitRender(audioController->remoteIOUnit,
@@ -149,6 +158,9 @@ static OSStatus playbackCallback(void *inRefCon,
   // Get the RemoteIO unit
   AudioComponent remoteIOComponent = AudioComponentFindNext(NULL,&audioComponentDescription);
   status = AudioComponentInstanceNew(remoteIOComponent,&(self->remoteIOUnit));
+  
+  NSLog (@"sTATUS IS = %d", (int)status);
+
   if (CheckError(status, "Couldn't get RemoteIO unit instance")) {
     return status;
   }
@@ -260,6 +272,5 @@ static OSStatus playbackCallback(void *inRefCon,
 - (OSStatus) stop {
   return AudioOutputUnitStop(self->remoteIOUnit);
 }
-
 
 @end

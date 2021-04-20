@@ -4,6 +4,7 @@ const Colors = {
   darkPurple: '#120238',
   white: '#FFFFFF',
   lightPurple: '#EEF0F9',
+  red: '#ff0000',
 };
 
 const NavigationConstants = {

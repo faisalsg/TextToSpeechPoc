@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   NativeModules,
+  NativeEventEmitter,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
@@ -19,6 +20,10 @@ import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
 const {GoogleSpeechManager} = NativeModules;
+const myModuleEvt = new NativeEventEmitter(NativeModules.GoogleSpeechManager)
+const speechHandler = NativeModules.GoogleSpeechManager;
+
+// const { DEFAULT_EVENT_NAME } = GoogleSpeechManager.getConstants();
 
 export default class HomeScreen extends Component {
 
@@ -80,9 +85,10 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
-
-    console.warn("called")
     GoogleSpeechManager.startRecording();
+    // console.warn("default response is", DEFAULT_EVENT_NAME);
+
+    // Voice.startSpeech(locale, callback);
    
     // this.setState({
     //   result: ' ',
@@ -93,6 +99,13 @@ export default class HomeScreen extends Component {
     // } catch (e) {
     //   console.error(e);
     // }
+  }
+
+  async getAudioResponse() {
+    console.warn("see if called");
+    // GoogleSpeechManager.sendAudioResponse('', response => {
+    //   console.warn("Created a new response", response);
+    // });  
   }
 
   async destroyRecognizer() {
@@ -107,27 +120,28 @@ export default class HomeScreen extends Component {
   }
 
   onSpeechStart = (e) => {
-    console.log('onSpeechStart', e);
+    console.warn('onSpeechStart', e);
   };
 
   onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized', e);
+    console.warn('onSpeechRecognized', e);
   };
 
   onSpeechEnd = (e) => {
-    console.log('onSpeechEnd', e);
+    console.warn('onSpeechEnd', e);
     this.startRecognizing();
+    GoogleSpeechManager.stopRecording();
   };
 
   onSpeechError = (e) => {
-    console.log('onSpeechError', e);
+    console.warn('onSpeechError', e);
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
 
   onSpeechPartialResults = (e) => {
-    console.log('onSpeechPartialResults: ', e);
+    console.warn('onSpeechPartialResults: ', e);
     this.setState({
       partialResults: e.value,
     });
@@ -138,7 +152,7 @@ export default class HomeScreen extends Component {
   };
 
   onSpeechResults = (e) => {
-    console.log('onSpeechResults', e);
+    console.warn('onSpeechResults', e);
     this.setState({
       results: e.value,
     });
@@ -241,6 +255,14 @@ export default class HomeScreen extends Component {
           <View>
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                this.getAudioResponse();
+              }}
+            >
+            </TouchableOpacity>
+          </View>
           <View>
             {Data.map((value, index) => {
               return (
@@ -279,6 +301,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 40,
+  },
+  buttonContainer: {
+    width: 40,
+    height: 40,
+    marginTop: 10,
+    alignSelf: 'center',
+    backgroundColor: Colors.red,
   },
   headingContainer: {
     marginTop: -50,

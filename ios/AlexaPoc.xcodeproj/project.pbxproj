@@ -11,18 +11,18 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1DEF5C2E6F729C26BB16E87C /* libPods-AlexaPoc-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37167CC31698F4B0B937D08F /* libPods-AlexaPoc-tvOSTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* AlexaPocTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AlexaPocTests.m */; };
-		39221295270FAF8AAA60D5E5 /* libPods-AlexaPoc-AlexaPocTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E779EB5F17BE03144CD450 /* libPods-AlexaPoc-AlexaPocTests.a */; };
+		49DDDC506E329C2AEAB2799D /* libPods-AlexaPoc-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0A557AC9DED416902282300 /* libPods-AlexaPoc-tvOS.a */; };
+		5A36E555D14947692551E5EA /* libPods-AlexaPoc-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299E9F770948754F03354698 /* libPods-AlexaPoc-tvOSTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		9845E505C6E6B1677A0E1D2A /* libPods-AlexaPoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E38F7DDA03611F20E96B8D /* libPods-AlexaPoc.a */; };
-		9D824C07262740A2009D31EB /* AudioControllerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C06262740A2009D31EB /* AudioControllerVC.m */; };
+		9D824C07262740A2009D31EB /* AudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C06262740A2009D31EB /* AudioController.m */; };
 		9D824C0E262740EB009D31EB /* SpeechRecognitionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */; };
 		9D824C5A262825D9009D31EB /* GoogleSpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D824C59262825D9009D31EB /* GoogleSpeechManager.m */; };
-		D28AE647A20223F130D2029C /* libPods-AlexaPoc-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0527FDE6F052F9BB428D9CA8 /* libPods-AlexaPoc-tvOS.a */; };
+		AB9975D4518AB4364B0DC023 /* libPods-AlexaPoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB0FDD5A8091B095B599AE5 /* libPods-AlexaPoc.a */; };
+		B833EA82C5C09EFEF6966774 /* libPods-AlexaPoc-AlexaPocTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFD48E7F656B1BA64F73264 /* libPods-AlexaPoc-AlexaPocTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,35 +47,36 @@
 		00E356EE1AD99517003FC87E /* AlexaPocTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlexaPocTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AlexaPocTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlexaPocTests.m; sourceTree = "<group>"; };
-		04E38F7DDA03611F20E96B8D /* libPods-AlexaPoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0527FDE6F052F9BB428D9CA8 /* libPods-AlexaPoc-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0BEFAABF98649319FDDAE08F /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-AlexaPocTests.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests.debug.xcconfig"; sourceTree = "<group>"; };
+		04952012F558129BA263BF58 /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-AlexaPocTests.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AlexaPoc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlexaPoc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AlexaPoc/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AlexaPoc/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AlexaPoc/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AlexaPoc/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AlexaPoc/main.m; sourceTree = "<group>"; };
-		19E779EB5F17BE03144CD450 /* libPods-AlexaPoc-AlexaPocTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-AlexaPocTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C85F1012BAA315CD1743086 /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; sourceTree = "<group>"; };
+		1CFD48E7F656B1BA64F73264 /* libPods-AlexaPoc-AlexaPocTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-AlexaPocTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		299E9F770948754F03354698 /* libPods-AlexaPoc-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* AlexaPoc-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AlexaPoc-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* AlexaPoc-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AlexaPoc-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		37167CC31698F4B0B937D08F /* libPods-AlexaPoc-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		434A26413494BE7353696F1E /* Pods-AlexaPoc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc.release.xcconfig"; sourceTree = "<group>"; };
-		5D0A8F990B858DBF126E3D99 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOSTests/Pods-AlexaPoc-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		6A855138297BD31041EEBA1A /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests.release.xcconfig"; sourceTree = "<group>"; };
-		6C457636ED62AE0130FFF01B /* Pods-AlexaPoc-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		7495ABDE0E2537CD4CA407B6 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOSTests/Pods-AlexaPoc-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AlexaPoc/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9D824C05262740A2009D31EB /* AudioControllerVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AudioControllerVC.h; path = AlexaPoc/AudioControllerVC.h; sourceTree = "<group>"; };
-		9D824C06262740A2009D31EB /* AudioControllerVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AudioControllerVC.m; path = AlexaPoc/AudioControllerVC.m; sourceTree = "<group>"; };
+		9D5C7887262D4A0D006D662B /* AlexaPoc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AlexaPoc-Bridging-Header.h"; sourceTree = "<group>"; };
+		9D824C05262740A2009D31EB /* AudioController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AudioController.h; path = AlexaPoc/AudioController.h; sourceTree = "<group>"; };
+		9D824C06262740A2009D31EB /* AudioController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AudioController.m; path = AlexaPoc/AudioController.m; sourceTree = "<group>"; };
 		9D824C0C262740EB009D31EB /* SpeechRecognitionService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechRecognitionService.h; sourceTree = "<group>"; };
 		9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechRecognitionService.m; sourceTree = "<group>"; };
 		9D824C58262825D9009D31EB /* GoogleSpeechManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleSpeechManager.h; sourceTree = "<group>"; };
 		9D824C59262825D9009D31EB /* GoogleSpeechManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleSpeechManager.m; sourceTree = "<group>"; };
-		A72503B447C4FC9E98F7A25E /* Pods-AlexaPoc-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		B0AE8E2C6AA4444CC1FDF06F /* Pods-AlexaPoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc.debug.xcconfig"; sourceTree = "<group>"; };
-		DDE8128DB2DD7591ACBEBD7D /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOSTests/Pods-AlexaPoc-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AAB0FDD5A8091B095B599AE5 /* libPods-AlexaPoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA8474E330FC7783A6E6D3A8 /* Pods-AlexaPoc-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		C50413E7AEABDC469BC80F6B /* Pods-AlexaPoc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc.release.xcconfig"; sourceTree = "<group>"; };
+		CB91CF2F925D49A5E6AE0577 /* Pods-AlexaPoc-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOS/Pods-AlexaPoc-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		D0A557AC9DED416902282300 /* libPods-AlexaPoc-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AlexaPoc-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D46C3EF9654C9515C1E9C6FB /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc-tvOSTests/Pods-AlexaPoc-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		F9176351CD80C40D765EBC65 /* Pods-AlexaPoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlexaPoc.debug.xcconfig"; path = "Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39221295270FAF8AAA60D5E5 /* libPods-AlexaPoc-AlexaPocTests.a in Frameworks */,
+				B833EA82C5C09EFEF6966774 /* libPods-AlexaPoc-AlexaPocTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9845E505C6E6B1677A0E1D2A /* libPods-AlexaPoc.a in Frameworks */,
+				AB9975D4518AB4364B0DC023 /* libPods-AlexaPoc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D28AE647A20223F130D2029C /* libPods-AlexaPoc-tvOS.a in Frameworks */,
+				49DDDC506E329C2AEAB2799D /* libPods-AlexaPoc-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DEF5C2E6F729C26BB16E87C /* libPods-AlexaPoc-tvOSTests.a in Frameworks */,
+				5A36E555D14947692551E5EA /* libPods-AlexaPoc-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,10 +144,11 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				9D824C05262740A2009D31EB /* AudioControllerVC.h */,
-				9D824C06262740A2009D31EB /* AudioControllerVC.m */,
+				9D824C05262740A2009D31EB /* AudioController.h */,
+				9D824C06262740A2009D31EB /* AudioController.m */,
 				9D824C0C262740EB009D31EB /* SpeechRecognitionService.h */,
 				9D824C0D262740EB009D31EB /* SpeechRecognitionService.m */,
+				9D5C7887262D4A0D006D662B /* AlexaPoc-Bridging-Header.h */,
 			);
 			name = AlexaPoc;
 			sourceTree = "<group>";
@@ -156,10 +158,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				04E38F7DDA03611F20E96B8D /* libPods-AlexaPoc.a */,
-				19E779EB5F17BE03144CD450 /* libPods-AlexaPoc-AlexaPocTests.a */,
-				0527FDE6F052F9BB428D9CA8 /* libPods-AlexaPoc-tvOS.a */,
-				37167CC31698F4B0B937D08F /* libPods-AlexaPoc-tvOSTests.a */,
+				AAB0FDD5A8091B095B599AE5 /* libPods-AlexaPoc.a */,
+				1CFD48E7F656B1BA64F73264 /* libPods-AlexaPoc-AlexaPocTests.a */,
+				D0A557AC9DED416902282300 /* libPods-AlexaPoc-tvOS.a */,
+				299E9F770948754F03354698 /* libPods-AlexaPoc-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -200,14 +202,14 @@
 		883CB8D8B9569BFF44992E3F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B0AE8E2C6AA4444CC1FDF06F /* Pods-AlexaPoc.debug.xcconfig */,
-				434A26413494BE7353696F1E /* Pods-AlexaPoc.release.xcconfig */,
-				0BEFAABF98649319FDDAE08F /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */,
-				6A855138297BD31041EEBA1A /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */,
-				6C457636ED62AE0130FFF01B /* Pods-AlexaPoc-tvOS.debug.xcconfig */,
-				A72503B447C4FC9E98F7A25E /* Pods-AlexaPoc-tvOS.release.xcconfig */,
-				DDE8128DB2DD7591ACBEBD7D /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */,
-				5D0A8F990B858DBF126E3D99 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */,
+				F9176351CD80C40D765EBC65 /* Pods-AlexaPoc.debug.xcconfig */,
+				C50413E7AEABDC469BC80F6B /* Pods-AlexaPoc.release.xcconfig */,
+				04952012F558129BA263BF58 /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */,
+				1C85F1012BAA315CD1743086 /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */,
+				BA8474E330FC7783A6E6D3A8 /* Pods-AlexaPoc-tvOS.debug.xcconfig */,
+				CB91CF2F925D49A5E6AE0577 /* Pods-AlexaPoc-tvOS.release.xcconfig */,
+				D46C3EF9654C9515C1E9C6FB /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */,
+				7495ABDE0E2537CD4CA407B6 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -219,11 +221,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "AlexaPocTests" */;
 			buildPhases = (
-				11D89805D45C610B6F447A62 /* [CP] Check Pods Manifest.lock */,
+				4F13E725A59118D704C8CA09 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				F8C6CE6323E9D89E92FF52B3 /* [CP] Copy Pods Resources */,
+				31182DA73A83033DC468787C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -239,13 +241,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AlexaPoc" */;
 			buildPhases = (
-				A7327100C4A4ADE394E6C6F9 /* [CP] Check Pods Manifest.lock */,
+				5D2218D8BDC93ABFE07424A8 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				E6446F2A1A56BA65FEAD2078 /* [CP] Copy Pods Resources */,
+				A4005018CBD72D475DC52C60 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -260,7 +262,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AlexaPoc-tvOS" */;
 			buildPhases = (
-				EF1BC7ADFBD2E572658DFB40 /* [CP] Check Pods Manifest.lock */,
+				8159B67FE8A1DBFA7A0736C4 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -280,7 +282,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "AlexaPoc-tvOSTests" */;
 			buildPhases = (
-				8CDC90E5D47D5B3ECB1BE908 /* [CP] Check Pods Manifest.lock */,
+				52145B3F39FCCE9EB2E2C349 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -390,9 +392,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		11D89805D45C610B6F447A62 /* [CP] Check Pods Manifest.lock */ = {
+		31182DA73A83033DC468787C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4F13E725A59118D704C8CA09 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -414,21 +450,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		8CDC90E5D47D5B3ECB1BE908 /* [CP] Check Pods Manifest.lock */ = {
+		52145B3F39FCCE9EB2E2C349 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -450,7 +472,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A7327100C4A4ADE394E6C6F9 /* [CP] Check Pods Manifest.lock */ = {
+		5D2218D8BDC93ABFE07424A8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -472,27 +494,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E6446F2A1A56BA65FEAD2078 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EF1BC7ADFBD2E572658DFB40 /* [CP] Check Pods Manifest.lock */ = {
+		8159B67FE8A1DBFA7A0736C4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -514,13 +516,13 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F8C6CE6323E9D89E92FF52B3 /* [CP] Copy Pods Resources */ = {
+		A4005018CBD72D475DC52C60 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
 			);
@@ -531,7 +533,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc-AlexaPocTests/Pods-AlexaPoc-AlexaPocTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AlexaPoc/Pods-AlexaPoc-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -588,7 +590,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				9D824C07262740A2009D31EB /* AudioControllerVC.m in Sources */,
+				9D824C07262740A2009D31EB /* AudioController.m in Sources */,
 				9D824C5A262825D9009D31EB /* GoogleSpeechManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9D824C0E262740EB009D31EB /* SpeechRecognitionService.m in Sources */,
@@ -630,7 +632,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0BEFAABF98649319FDDAE08F /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */;
+			baseConfigurationReference = 04952012F558129BA263BF58 /* Pods-AlexaPoc-AlexaPocTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -653,7 +655,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6A855138297BD31041EEBA1A /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */;
+			baseConfigurationReference = 1C85F1012BAA315CD1743086 /* Pods-AlexaPoc-AlexaPocTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -673,7 +675,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0AE8E2C6AA4444CC1FDF06F /* Pods-AlexaPoc.debug.xcconfig */;
+			baseConfigurationReference = F9176351CD80C40D765EBC65 /* Pods-AlexaPoc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -697,7 +699,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 434A26413494BE7353696F1E /* Pods-AlexaPoc.release.xcconfig */;
+			baseConfigurationReference = C50413E7AEABDC469BC80F6B /* Pods-AlexaPoc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -719,7 +721,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C457636ED62AE0130FFF01B /* Pods-AlexaPoc-tvOS.debug.xcconfig */;
+			baseConfigurationReference = BA8474E330FC7783A6E6D3A8 /* Pods-AlexaPoc-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -747,7 +749,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A72503B447C4FC9E98F7A25E /* Pods-AlexaPoc-tvOS.release.xcconfig */;
+			baseConfigurationReference = CB91CF2F925D49A5E6AE0577 /* Pods-AlexaPoc-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -775,7 +777,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDE8128DB2DD7591ACBEBD7D /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = D46C3EF9654C9515C1E9C6FB /* Pods-AlexaPoc-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -802,7 +804,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5D0A8F990B858DBF126E3D99 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 7495ABDE0E2537CD4CA407B6 /* Pods-AlexaPoc-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

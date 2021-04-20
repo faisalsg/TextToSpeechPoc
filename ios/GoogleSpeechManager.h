@@ -7,14 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GoogleSpeechManager : NSObject<RCTBridgeModule>
-
-+(void)startRecording;
-
-+(void)stopRecording;
+@interface GoogleSpeechManager : RCTEventEmitter <RCTBridgeModule>
 
 @end
 
