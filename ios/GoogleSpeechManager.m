@@ -17,7 +17,7 @@
 
 @interface GoogleSpeechManager ()<AudioControllerDelegate>
 @property (nonatomic, strong) NSMutableData *audioData;
-@property (nonatomic, strong) NSMutableArray *audioResponse;
+@property (nonatomic, strong) NSArray *audioResponse;
 
 @end
 
@@ -97,13 +97,6 @@ RCT_EXPORT_METHOD(stopRecording)
     self.audioData = [[NSMutableData alloc] init];
   }}
 
-
-//NSDictionary *props = @{@"images" : self.audioResponse};
-//
-//RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-//                                                 moduleName:@"ImageBrowserApp"
-                                        //  initialProperties:props];
-
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[
@@ -117,25 +110,17 @@ RCT_EXPORT_METHOD(stopRecording)
              ];
 }
 
-- (void) sendResult:(NSDictionary*)error :(NSString*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
-    if (error != nil) {
-        [self sendEventWithName:@"onSpeechError" body:@{@"error": error}];
-    }
-    if (bestTranscription != nil) {
-        [self sendEventWithName:@"onSpeechResults" body:@{@"value":@[bestTranscription]} ];
-    }
+- (void) sendResult:(NSArray*)transcriptions{
+  NSLog(@"transcriptions RESPONSE: %@",transcriptions);
     if (transcriptions != nil) {
         [self sendEventWithName:@"onSpeechPartialResults" body:@{@"value":transcriptions}];
-    }
-    if (isFinal != nil) {
-        [self sendEventWithName:@"onSpeechRecognized" body: @{@"isFinal": isFinal}];
     }
 }
 
 RCT_EXPORT_METHOD(sendAudioResponse:(NSString *)title callback: (RCTResponseSenderBlock)callback)
 {
-  [self sendResult:@{@"code": @"audio", @"message": self.audioResponse} :nil :nil :nil];
- callback(self.audioResponse);
+ // [self sendResult:self.audioResponse];
+  callback(self.audioResponse);
 }
 
 @end

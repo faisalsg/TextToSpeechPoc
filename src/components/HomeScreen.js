@@ -20,10 +20,6 @@ import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
 const {GoogleSpeechManager} = NativeModules;
-const myModuleEvt = new NativeEventEmitter(NativeModules.GoogleSpeechManager)
-const speechHandler = NativeModules.GoogleSpeechManager;
-
-// const { DEFAULT_EVENT_NAME } = GoogleSpeechManager.getConstants();
 
 export default class HomeScreen extends Component {
 
@@ -86,7 +82,6 @@ export default class HomeScreen extends Component {
 
   async startRecognizing() {
     GoogleSpeechManager.startRecording();
-    // console.warn("default response is", DEFAULT_EVENT_NAME);
 
     // Voice.startSpeech(locale, callback);
    
@@ -103,7 +98,7 @@ export default class HomeScreen extends Component {
 
   async getAudioResponse() {
     console.warn("see if called");
-    GoogleSpeechManager.sendAudioResponse('', response => {
+    GoogleSpeechManager.sendAudioResponse("",response => {
       console.warn("Created a new response", response);
     });  
   }
@@ -140,12 +135,18 @@ export default class HomeScreen extends Component {
     });
   };
 
-  onSpeechPartialResults = (e) => {
+  onSpeechPartialResults = (e) => { 
     console.warn('onSpeechPartialResults: ', e);
-    this.setState({
-      partialResults: e.value,
-    });
-  };
+
+    //this._events.onSpeechPartialResults = fn;
+  }
+
+  // onSpeechPartialResults = (e) => {
+  //   console.warn('onSpeechPartialResults: ', e);
+  //   this.setState({
+  //     partialResults: e.value,
+  //   });
+  // };
 
   onSpeechVolumeChanged = (e) => {
     // console.log('onSpeechVolumeChanged: ', e);
