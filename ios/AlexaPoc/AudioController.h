@@ -17,6 +17,7 @@
 
 + (instancetype) sharedInstance;
 @property (nonatomic, strong) NSMutableData *audioData;
+@property (nonatomic, strong) NSMutableArray *audioResponse;
 @property (nonatomic, weak) id<AudioControllerDelegate> delegate;
 
 - (OSStatus) prepare;
