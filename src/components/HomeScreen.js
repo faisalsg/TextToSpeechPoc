@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Image,
   NativeModules,
-  NativeEventEmitter,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
@@ -19,11 +18,6 @@ import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
 const { GoogleSpeechManager } = NativeModules;
-const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
-
-const onSessionConnect = (event) => {
-  console.log(event);
-};
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -56,11 +50,6 @@ export default class HomeScreen extends Component {
   async componentDidMount() {
     this.startRecognizing();
 
-    const subscription = eventEmitter.addListener(
-      'onSpeechPartialResults',
-      onSessionConnect
-    );
-
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
@@ -73,17 +62,8 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
-    console.warn("started again");
-    GoogleSpeechManager.startRecording();
-
-    // GoogleSpeechManager.sendAudioResponse('', (response) => {
-    //   console.warn('Created a new response', response);
-    // });
-  }
-
-  async getAudioResponse() {
-    GoogleSpeechManager.sendAudioResponse('', (response) => {
-      console.warn('Created a new response', response);
+    GoogleSpeechManager.startRecording('', (response) => {
+      console.warn('Created start response', response);
     });
   }
 
@@ -191,12 +171,6 @@ export default class HomeScreen extends Component {
           <View>
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => {
-              this.getAudioResponse();
-            }}
-          ></TouchableOpacity>
           <View>
             {Data.map((value, index) => {
               return (
