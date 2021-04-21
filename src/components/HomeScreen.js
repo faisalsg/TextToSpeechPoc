@@ -15,19 +15,17 @@ import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
-import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
-const {GoogleSpeechManager} = NativeModules;
+const { GoogleSpeechManager } = NativeModules;
 const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
 
 const onSessionConnect = (event) => {
   console.log(event);
-}
+};
 
 export default class HomeScreen extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -38,11 +36,9 @@ export default class HomeScreen extends Component {
       text: ' ',
       voices: [],
       ttsStatus: 'initializing',
-      onSpeechPartialResults: () => {},
       selectedVoice: null,
     };
   }
-
 
   buttonPressed = async (title) => {
     await this.readText(title);
@@ -58,24 +54,12 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    // Event Listeners for speech-to-text
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    //Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-
     this.startRecognizing();
 
-    // Event Listeners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => {
-      this.destroyRecognizer();
-      Voice.destroy().then(Voice.removeAllListeners);
-    });
-
-    const subscription = eventEmitter.addListener('onSpeechPartialResults', onSessionConnect);
+    const subscription = eventEmitter.addListener(
+      'onSpeechPartialResults',
+      onSessionConnect
+    );
 
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
@@ -85,80 +69,23 @@ export default class HomeScreen extends Component {
   }
 
   async componentWillUnmount() {
-    this.destroyRecognizer();
     subscription.remove();
-    Voice.destroy().then(Voice.removeAllListeners);
   }
 
   async startRecognizing() {
     console.warn("started again");
     GoogleSpeechManager.startRecording();
 
-    // GoogleSpeechManager.sendAudioResponse("",response => {
-    //   console.warn("Created a new response", response);
-    // });  
-
-    // Voice.startSpeech(locale, callback);
-   
-    // this.setState({
-    //   result: ' ',
+    // GoogleSpeechManager.sendAudioResponse('', (response) => {
+    //   console.warn('Created a new response', response);
     // });
-
-    // try {
-    //   await Voice.start('en_US');
-    // } catch (e) {
-    //   console.error(e);
-    // }
   }
 
   async getAudioResponse() {
-    GoogleSpeechManager.sendAudioResponse("",response => {
-      console.warn("Created a new response", response);
-    });  
-  }
-
-  async destroyRecognizer() {
-    try {
-      await Voice.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      results: ' ',
+    GoogleSpeechManager.sendAudioResponse('', (response) => {
+      console.warn('Created a new response', response);
     });
   }
-
-  onSpeechStart = (e) => {
-    console.warn('onSpeechStart', e);
-  };
-
-  onSpeechRecognized = (e) => {
-    console.warn('onSpeechRecognized', e);
-  };
-
-  onSpeechEnd = (e) => {
-    console.warn('onSpeechEnd', e);
-    this.startRecognizing();
-    GoogleSpeechManager.stopRecording();
-  };
-
-  onSpeechError = (e) => {
-    console.warn('onSpeechError', e);
-    this.setState({
-      error: JSON.stringify(e.error),
-    });
-  };
-
-  onSpeechPartialResults = (e) => {
-    console.warn('onSpeechPartialResults: ', e);
-    this.setState({
-      partialResults: e.value,
-    });
-  };
-
-  onSpeechVolumeChanged = (e) => {
-    // console.log('onSpeechVolumeChanged: ', e);
-  };
 
   onSpeechResults = (e) => {
     console.warn('onSpeechResults', e);
@@ -264,13 +191,12 @@ export default class HomeScreen extends Component {
           <View>
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
-            <TouchableOpacity
+          <TouchableOpacity
             style={styles.buttonContainer}
-              onPress={() => {
-                this.getAudioResponse();
-              }}
-            >
-            </TouchableOpacity>
+            onPress={() => {
+              this.getAudioResponse();
+            }}
+          ></TouchableOpacity>
           <View>
             {Data.map((value, index) => {
               return (
