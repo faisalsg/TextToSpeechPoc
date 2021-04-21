@@ -91,7 +91,12 @@ export default class HomeScreen extends Component {
   }
 
   async startRecognizing() {
+    console.warn("started again");
     GoogleSpeechManager.startRecording();
+
+    // GoogleSpeechManager.sendAudioResponse("",response => {
+    //   console.warn("Created a new response", response);
+    // });  
 
     // Voice.startSpeech(locale, callback);
    
