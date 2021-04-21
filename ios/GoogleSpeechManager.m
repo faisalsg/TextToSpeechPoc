@@ -9,8 +9,6 @@
 #import "AudioController.h"
 #import "SpeechRecognitionService.h"
 #import <React/RCTLog.h>
-#import <React/RCTEventEmitter.h>
-
 #import "google/cloud/speech/v1/CloudSpeech.pbrpc.h"
 
 #define SAMPLE_RATE 16000.0f
