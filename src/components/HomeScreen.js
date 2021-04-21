@@ -20,10 +20,11 @@ import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
 const {GoogleSpeechManager} = NativeModules;
-const myModuleEvt = new NativeEventEmitter(NativeModules.GoogleSpeechManager)
-const speechHandler = NativeModules.GoogleSpeechManager;
+const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
 
-// const { DEFAULT_EVENT_NAME } = GoogleSpeechManager.getConstants();
+const onSessionConnect = (event) => {
+  console.log(event);
+}
 
 export default class HomeScreen extends Component {
 
@@ -37,6 +38,7 @@ export default class HomeScreen extends Component {
       text: ' ',
       voices: [],
       ttsStatus: 'initializing',
+      onSpeechPartialResults: () => {},
       selectedVoice: null,
     };
   }
@@ -62,7 +64,7 @@ export default class HomeScreen extends Component {
     Voice.onSpeechEnd = this.onSpeechEnd;
     Voice.onSpeechError = this.onSpeechError;
     Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    //Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
 
     this.startRecognizing();
@@ -72,6 +74,9 @@ export default class HomeScreen extends Component {
       this.destroyRecognizer();
       Voice.destroy().then(Voice.removeAllListeners);
     });
+
+    const subscription = eventEmitter.addListener('onSpeechPartialResults', onSessionConnect);
+
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
@@ -81,12 +86,12 @@ export default class HomeScreen extends Component {
 
   async componentWillUnmount() {
     this.destroyRecognizer();
+    subscription.remove();
     Voice.destroy().then(Voice.removeAllListeners);
   }
 
   async startRecognizing() {
     GoogleSpeechManager.startRecording();
-    // console.warn("default response is", DEFAULT_EVENT_NAME);
 
     // Voice.startSpeech(locale, callback);
    
@@ -102,10 +107,9 @@ export default class HomeScreen extends Component {
   }
 
   async getAudioResponse() {
-    console.warn("see if called");
-    // GoogleSpeechManager.sendAudioResponse('', response => {
-    //   console.warn("Created a new response", response);
-    // });  
+    GoogleSpeechManager.sendAudioResponse("",response => {
+      console.warn("Created a new response", response);
+    });  
   }
 
   async destroyRecognizer() {
@@ -255,14 +259,13 @@ export default class HomeScreen extends Component {
           <View>
             <Text style={styles.subHeadingText}>{Texts.selectDish}</Text>
           </View>
-          <View style={styles.buttonContainer}>
             <TouchableOpacity
+            style={styles.buttonContainer}
               onPress={() => {
                 this.getAudioResponse();
               }}
             >
             </TouchableOpacity>
-          </View>
           <View>
             {Data.map((value, index) => {
               return (

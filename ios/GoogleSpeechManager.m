@@ -9,8 +9,6 @@
 #import "AudioController.h"
 #import "SpeechRecognitionService.h"
 #import <React/RCTLog.h>
-#import <React/RCTEventEmitter.h>
-
 #import "google/cloud/speech/v1/CloudSpeech.pbrpc.h"
 
 #define SAMPLE_RATE 16000.0f
@@ -18,18 +16,17 @@
 @interface GoogleSpeechManager ()<AudioControllerDelegate>
 @property (nonatomic, strong) NSMutableData *audioData;
 @property (nonatomic, strong) NSMutableArray *audioResponse;
+@property (nonatomic) RCTResponseSenderBlock globalCallback;
 
 @end
 
 @implementation GoogleSpeechManager
-{
-  bool hasListeners;
-}
 
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(startRecording)
 {
+  self.audioResponse = [[NSMutableArray alloc] init];
   [AudioController sharedInstance].delegate = self;
 
   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -45,18 +42,6 @@ RCT_EXPORT_METHOD(stopRecording)
 {
   [[AudioController sharedInstance] stop];
   [[SpeechRecognitionService sharedInstance] stopStreaming];
-}
-
-// Will be called when this module's first listener is added.
--(void)startObserving {
-    hasListeners = YES;
-    // Set up any upstream listeners or background tasks as necessary
-}
-
-// Will be called when this module's last listener is removed, or on dealloc.
--(void)stopObserving {
-    hasListeners = NO;
-    // Remove upstream listeners, stop unnecessary background tasks
 }
 
 - (void) processSampleData:(NSData *)data
@@ -76,7 +61,11 @@ RCT_EXPORT_METHOD(stopRecording)
                                                 withCompletion:^(StreamingRecognizeResponse *response, NSError *error) {
       if (error) {
         NSLog(@"ERROR: %@", error);
+        if (self.globalCallback) {
+          self.globalCallback(@[error]);
+        }
         [[AudioController sharedInstance] stop];
+
       } else if (response) {
         BOOL finished = NO;
         NSLog(@"RESULT RESPONSE: %@", response.resultsArray);
@@ -84,7 +73,14 @@ RCT_EXPORT_METHOD(stopRecording)
         for (StreamingRecognitionResult *result in response.resultsArray) {
           if (result.isFinal) {
             NSLog(@"Finished RESPONSE: %@", response.resultsArray);
-            self.audioResponse = response.resultsArray;
+            NSMutableArray *formattedArray = [[NSMutableArray alloc] init];
+            for(int i = 0; i< result.alternativesArray.count; i++) {
+              SpeechRecognitionAlternative *speechRecognition = (SpeechRecognitionAlternative *)result.alternativesArray[i];
+              NSDictionary *speechRecognitionDict = @{@"transcript": speechRecognition.transcript, @"confidence": [NSNumber numberWithFloat:speechRecognition.confidence]};
+              [formattedArray addObject: speechRecognitionDict];
+            }
+
+            [self.audioResponse addObject: formattedArray];
             finished = YES;
           }
         }
@@ -97,45 +93,9 @@ RCT_EXPORT_METHOD(stopRecording)
     self.audioData = [[NSMutableData alloc] init];
   }}
 
-
-//NSDictionary *props = @{@"images" : self.audioResponse};
-//
-//RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-//                                                 moduleName:@"ImageBrowserApp"
-                                        //  initialProperties:props];
-
-- (NSArray<NSString *> *)supportedEvents
-{
-    return @[
-             @"onSpeechResults",
-             @"onSpeechStart",
-             @"onSpeechPartialResults",
-             @"onSpeechError",
-             @"onSpeechEnd",
-             @"onSpeechRecognized",
-             @"onSpeechVolumeChanged"
-             ];
-}
-
-- (void) sendResult:(NSDictionary*)error :(NSString*)bestTranscription :(NSArray*)transcriptions :(NSNumber*)isFinal {
-    if (error != nil) {
-        [self sendEventWithName:@"onSpeechError" body:@{@"error": error}];
-    }
-    if (bestTranscription != nil) {
-        [self sendEventWithName:@"onSpeechResults" body:@{@"value":@[bestTranscription]} ];
-    }
-    if (transcriptions != nil) {
-        [self sendEventWithName:@"onSpeechPartialResults" body:@{@"value":transcriptions}];
-    }
-    if (isFinal != nil) {
-        [self sendEventWithName:@"onSpeechRecognized" body: @{@"isFinal": isFinal}];
-    }
-}
-
 RCT_EXPORT_METHOD(sendAudioResponse:(NSString *)title callback: (RCTResponseSenderBlock)callback)
 {
-  [self sendResult:@{@"code": @"audio", @"message": self.audioResponse} :nil :nil :nil];
- callback(self.audioResponse);
+  callback(@[self.audioResponse]);
 }
 
 @end
