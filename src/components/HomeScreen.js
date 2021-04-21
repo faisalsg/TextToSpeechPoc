@@ -20,6 +20,11 @@ import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
 
 const {GoogleSpeechManager} = NativeModules;
+const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
+
+const onSessionConnect = (event) => {
+  console.log(event);
+}
 
 export default class HomeScreen extends Component {
 
@@ -33,6 +38,7 @@ export default class HomeScreen extends Component {
       text: ' ',
       voices: [],
       ttsStatus: 'initializing',
+      onSpeechPartialResults: () => {},
       selectedVoice: null,
     };
   }
@@ -58,7 +64,7 @@ export default class HomeScreen extends Component {
     Voice.onSpeechEnd = this.onSpeechEnd;
     Voice.onSpeechError = this.onSpeechError;
     Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    //Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
 
     this.startRecognizing();
@@ -68,6 +74,9 @@ export default class HomeScreen extends Component {
       this.destroyRecognizer();
       Voice.destroy().then(Voice.removeAllListeners);
     });
+
+    const subscription = eventEmitter.addListener('onSpeechPartialResults', onSessionConnect);
+
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
@@ -77,6 +86,7 @@ export default class HomeScreen extends Component {
 
   async componentWillUnmount() {
     this.destroyRecognizer();
+    subscription.remove();
     Voice.destroy().then(Voice.removeAllListeners);
   }
 
@@ -97,7 +107,6 @@ export default class HomeScreen extends Component {
   }
 
   async getAudioResponse() {
-    console.warn("see if called");
     GoogleSpeechManager.sendAudioResponse("",response => {
       console.warn("Created a new response", response);
     });  
@@ -135,18 +144,12 @@ export default class HomeScreen extends Component {
     });
   };
 
-  onSpeechPartialResults = (e) => { 
+  onSpeechPartialResults = (e) => {
     console.warn('onSpeechPartialResults: ', e);
-
-    //this._events.onSpeechPartialResults = fn;
-  }
-
-  // onSpeechPartialResults = (e) => {
-  //   console.warn('onSpeechPartialResults: ', e);
-  //   this.setState({
-  //     partialResults: e.value,
-  //   });
-  // };
+    this.setState({
+      partialResults: e.value,
+    });
+  };
 
   onSpeechVolumeChanged = (e) => {
     // console.log('onSpeechVolumeChanged: ', e);
