@@ -83,8 +83,22 @@ export default class HomeScreen extends Component {
   async getAudioResponse() {
     GoogleSpeechManager.sendAudioResponse('', (response) => {
       console.warn('Created a new response', response);
+      this.setState({
+        results: ' ',
+      });
+      this.displayResults(response);
     });
   }
+
+  displayResults = (response) => {
+    console.log(response);
+    if (typeof response !== 'undefined' && response.length > 0) {
+      console.log('length', response[0][0].transcript);
+      this.setState({
+        results: response[0][0].transcript,
+      });
+    }
+  };
 
   onSpeechResults = (e) => {
     console.warn('onSpeechResults', e);
@@ -179,6 +193,7 @@ export default class HomeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
+                console.log('hey alexa');
                 this.startRecognizing();
               }}
             >
