@@ -24,18 +24,19 @@
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(startRecording)
+RCT_EXPORT_METHOD(startRecording:(NSString *)title callback: (RCTResponseSenderBlock)callback)
 {
   self.audioResponse = [[NSMutableArray alloc] init];
   [AudioController sharedInstance].delegate = self;
-
+  
   AVAudioSession *audioSession = [AVAudioSession sharedInstance];
   [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
-
+  
   _audioData = [[NSMutableData alloc] init];
   [[AudioController sharedInstance] prepare];
   [[SpeechRecognitionService sharedInstance] setSampleRate:SAMPLE_RATE];
   [[AudioController sharedInstance] start];
+  self.globalCallback = callback;
 }
 
 RCT_EXPORT_METHOD(stopRecording)
@@ -53,7 +54,7 @@ RCT_EXPORT_METHOD(stopRecording)
   for (int i = 0; i < frameCount; i++) {
     sum += abs(samples[i]);
   }
-
+  
   int chunk_size = 0.1 /* seconds/chunk */ * SAMPLE_RATE * 2 /* bytes/sample */ ; /* bytes/chunk */
   
   if ([self.audioData length] > chunk_size) {
@@ -65,11 +66,11 @@ RCT_EXPORT_METHOD(stopRecording)
           self.globalCallback(@[error]);
         }
         [[AudioController sharedInstance] stop];
-
+        
       } else if (response) {
         BOOL finished = NO;
         NSLog(@"RESULT RESPONSE: %@", response.resultsArray);
-
+        
         for (StreamingRecognitionResult *result in response.resultsArray) {
           if (result.isFinal) {
             NSLog(@"Finished RESPONSE: %@", response.resultsArray);
@@ -79,12 +80,15 @@ RCT_EXPORT_METHOD(stopRecording)
               NSDictionary *speechRecognitionDict = @{@"transcript": speechRecognition.transcript, @"confidence": [NSNumber numberWithFloat:speechRecognition.confidence]};
               [formattedArray addObject: speechRecognitionDict];
             }
-
+            
             [self.audioResponse addObject: formattedArray];
             finished = YES;
           }
         }
         if (finished) {
+          if (self.globalCallback) {
+            self.globalCallback(@[self.audioResponse]);
+          }
           [[AudioController sharedInstance] stop];
         }
       }
