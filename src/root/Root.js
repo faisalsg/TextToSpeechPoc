@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import HomeScreen from '../components/HomeScreen';
 import RecipeScreen from '../components/RecipeScreen';
+import TestScreen from '../components/Test';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationConstants } from '../util/constants/Constants';
 
@@ -23,6 +24,11 @@ export default class Root extends React.Component {
         <Stack.Screen
           name={NavigationConstants.RecipeScreen}
           component={RecipeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={NavigationConstants.TestScreen}
+          component={TestScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -41,13 +41,13 @@ export default class HomeScreen extends Component {
   }
 
   buttonPressed = async (title) => {
-    await this.readText(title);
+    // await this.readText(title);
     this.setState({ dishSelected: title });
   };
 
   moveToRecipeScreen() {
+    console.warn('move to next screen');
     let title = this.state.dishSelected;
-    this.destroyRecognizer();
     this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
       value: title,
     });
@@ -91,49 +91,36 @@ export default class HomeScreen extends Component {
   }
 
   displayResults = (response) => {
-    console.log(response);
     if (typeof response !== 'undefined' && response.length > 0) {
-      console.log('length', response[0][0].transcript);
       this.setState({
-        results: response[0][0].transcript,
+        results: response[0][0].transcript.toLowerCase(),
       });
+      this.onSpeechResults(response[0][0].transcript.toLowerCase());
     }
   };
 
   onSpeechResults = (e) => {
-    console.warn('onSpeechResults', e);
-    this.setState({
-      results: e.value,
-    });
-    const latestArray = e.value[e.value.length - 1];
-    const indexOfTrigger =
-      latestArray.lastIndexOf('hello clove') ||
-      latestArray.lastIndexOf('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove');
-    if (
-      latestArray.includes('hello clove') ||
-      latestArray.includes('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove')
-    ) {
-      const question = latestArray
-        .substring(indexOfTrigger + 11, latestArray.length)
-        .toLowerCase();
+    // const latestArray = e.value[e.value.length - 1];
+
+    // const indexOfTrigger =
+    //   e.lastIndexOf('hello google') || e.lastIndexOf('Hello google');
+    if (e.includes('hello app') || e.includes('hello App')) {
+      const question = e.toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);
       } else if (question.includes(Data[1].title.toLowerCase())) {
         this.buttonPressed(Data[1].title);
       } else if (question.includes(Data[2].title.toLowerCase())) {
         this.buttonPressed(Data[2].title);
+      } else if (question.includes('home screen')) {
+        setTimeout(() => {
+          this.props.navigation.navigate(NavigationConstants.TestScreen);
+        }, 2000);
       } else {
         console.log('Not recognized');
       }
     }
+    this.startRecognizing();
   };
 
   initTts = async () => {
@@ -169,10 +156,10 @@ export default class HomeScreen extends Component {
       this.setState({ ttsStatus: 'initialized' });
     }
   };
-  readText = async (text) => {
-    Tts.stop();
-    Tts.speak(text);
-  };
+  // readText = async (text) => {
+  //   Tts.stop();
+  //   Tts.speak(text);
+  // };
 
   render() {
     return (

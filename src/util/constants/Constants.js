@@ -11,6 +11,7 @@ const NavigationConstants = {
   VoiceTest: 'VoiceTest',
   HomeScreen: 'HomeScreen',
   RecipeScreen: 'RecipeScreen',
+  TestScreen: 'Test Screen',
 };
 
 const Enums = {
