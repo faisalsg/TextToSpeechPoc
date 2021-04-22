@@ -26,6 +26,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(startRecording:(NSString *)title callback: (RCTResponseSenderBlock)callback)
 {
+  self.globalCallback = callback;
   self.audioResponse = [[NSMutableArray alloc] init];
   [AudioController sharedInstance].delegate = self;
   
@@ -36,7 +37,6 @@ RCT_EXPORT_METHOD(startRecording:(NSString *)title callback: (RCTResponseSenderB
   [[AudioController sharedInstance] prepare];
   [[SpeechRecognitionService sharedInstance] setSampleRate:SAMPLE_RATE];
   [[AudioController sharedInstance] start];
-  self.globalCallback = callback;
 }
 
 RCT_EXPORT_METHOD(stopRecording)
