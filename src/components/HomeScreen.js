@@ -8,14 +8,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  NativeModules,
 } from 'react-native';
 import { Texts } from '../util/constants/Strings';
 import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
-import Voice from '@react-native-community/voice';
 import { ImageConstants } from '../assets/ImageConstants';
 import Tts from 'react-native-tts';
+
+const { GoogleSpeechManager } = NativeModules;
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -33,35 +35,21 @@ export default class HomeScreen extends Component {
   }
 
   buttonPressed = async (title) => {
-    await this.readText(title);
+    // await this.readText(title);
     this.setState({ dishSelected: title });
   };
 
   moveToRecipeScreen() {
+    console.warn('move to next screen');
     let title = this.state.dishSelected;
-    this.destroyRecognizer();
     this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
       value: title,
     });
   }
 
   async componentDidMount() {
-    // Event Listeners for speech-to-text
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-
     this.startRecognizing();
 
-    // Event Listeners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => {
-      this.destroyRecognizer();
-      Voice.destroy().then(Voice.removeAllListeners);
-    });
     Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
     Tts.setDefaultRate(this.state.speechRate);
@@ -70,98 +58,50 @@ export default class HomeScreen extends Component {
   }
 
   async componentWillUnmount() {
-    this.destroyRecognizer();
-    Voice.destroy().then(Voice.removeAllListeners);
+    subscription.remove();
   }
 
   async startRecognizing() {
-    this.setState({
-      result: ' ',
-    });
-
-    try {
-      await Voice.start('en_US');
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async destroyRecognizer() {
-    try {
-      await Voice.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      results: ' ',
+    GoogleSpeechManager.startRecording('', (response) => {
+      console.warn('Created start response', response);
+      this.setState({
+        results: ' ',
+      });
+      this.displayResults(response);
     });
   }
 
-  onSpeechStart = (e) => {
-    console.log('onSpeechStart', e);
-  };
-
-  onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized', e);
-  };
-
-  onSpeechEnd = (e) => {
-    console.log('onSpeechEnd', e);
-    this.startRecognizing();
-  };
-
-  onSpeechError = (e) => {
-    console.log('onSpeechError', e);
-    this.setState({
-      error: JSON.stringify(e.error),
-    });
-  };
-
-  onSpeechPartialResults = (e) => {
-    console.log('onSpeechPartialResults: ', e);
-    this.setState({
-      partialResults: e.value,
-    });
-  };
-
-  onSpeechVolumeChanged = (e) => {
-    // console.log('onSpeechVolumeChanged: ', e);
+  displayResults = (response) => {
+    if (typeof response !== 'undefined' && response.length > 0) {
+      this.setState({
+        results: response[0][0].transcript.toLowerCase(),
+      });
+      this.onSpeechResults(response[0][0].transcript.toLowerCase());
+    }
   };
 
   onSpeechResults = (e) => {
-    console.log('onSpeechResults', e);
-    this.setState({
-      results: e.value,
-    });
-    const latestArray = e.value[e.value.length - 1];
-    const indexOfTrigger =
-      latestArray.lastIndexOf('hello clove') ||
-      latestArray.lastIndexOf('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove');
-    if (
-      latestArray.includes('hello clove') ||
-      latestArray.includes('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove')
-    ) {
-      const question = latestArray
-        .substring(indexOfTrigger + 11, latestArray.length)
-        .toLowerCase();
+    // const latestArray = e.value[e.value.length - 1];
+
+    // const indexOfTrigger =
+    //   e.lastIndexOf('hello google') || e.lastIndexOf('Hello google');
+    if (e.includes('hello app') || e.includes('hello App')) {
+      const question = e.toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);
       } else if (question.includes(Data[1].title.toLowerCase())) {
         this.buttonPressed(Data[1].title);
       } else if (question.includes(Data[2].title.toLowerCase())) {
         this.buttonPressed(Data[2].title);
+      } else if (question.includes('home screen')) {
+        setTimeout(() => {
+          this.props.navigation.navigate(NavigationConstants.TestScreen);
+        }, 2000);
       } else {
         console.log('Not recognized');
       }
     }
+    this.startRecognizing();
   };
 
   initTts = async () => {
@@ -197,10 +137,10 @@ export default class HomeScreen extends Component {
       this.setState({ ttsStatus: 'initialized' });
     }
   };
-  readText = async (text) => {
-    Tts.stop();
-    Tts.speak(text);
-  };
+  // readText = async (text) => {
+  //   Tts.stop();
+  //   Tts.speak(text);
+  // };
 
   render() {
     return (
@@ -221,6 +161,7 @@ export default class HomeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
+                console.log('hey alexa');
                 this.startRecognizing();
               }}
             >
@@ -270,6 +211,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 40,
+  },
+  buttonContainer: {
+    width: 40,
+    height: 40,
+    marginTop: 10,
+    alignSelf: 'center',
+    backgroundColor: Colors.red,
   },
   headingContainer: {
     marginTop: -50,

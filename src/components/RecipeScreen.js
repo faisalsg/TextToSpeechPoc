@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  NativeModules,
+  NativeEventEmitter,
 } from 'react-native';
 import { RecipeOne, Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
@@ -15,8 +17,14 @@ import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
-import Voice from '@react-native-community/voice';
 import Tts from 'react-native-tts';
+
+const { GoogleSpeechManager } = NativeModules;
+const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
+
+const onSessionConnect = (event) => {
+  console.log(event);
+};
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -43,21 +51,16 @@ export default class RecipeScreen extends Component {
   }
 
   async componentDidMount() {
-    // Event Listeners for speech-to-text
-    Voice.onSpeechStart = this.onSpeechStart;
-    Voice.onSpeechRecognized = this.onSpeechRecognized;
-    Voice.onSpeechEnd = this.onSpeechEnd;
-    Voice.onSpeechError = this.onSpeechError;
-    Voice.onSpeechResults = this.onSpeechResults;
-    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
-    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-
     this.startRecognizing();
+
+    const subscription = eventEmitter.addListener(
+      'onSpeechPartialResults',
+      onSessionConnect
+    );
 
     // Event Listeners for speech-to-text
     Tts.addEventListener('tts-start', (event) => {
-      this.destroyRecognizer();
-      Voice.destroy().then(Voice.removeAllListeners);
+      console.log(event);
     });
     Tts.addEventListener('tts-finish', (event) => {
       this.nextStep();
@@ -68,64 +71,19 @@ export default class RecipeScreen extends Component {
     Tts.getInitStatus().then(this.initTts);
   }
 
-  componentWillUnmount() {
-    this.destroyRecognizer();
-    Voice.destroy().then(Voice.removeAllListeners);
+  async componentWillUnmount() {
+    subscription.remove();
   }
 
   async startRecognizing() {
-    this.setState({
-      result: ' ',
-    });
-
-    try {
-      await Voice.start('en_US');
-    } catch (e) {
-      console.error(e);
-    }
+    GoogleSpeechManager.startRecording();
   }
 
-  async destroyRecognizer() {
-    try {
-      await Voice.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState({
-      results: ' ',
+  async getAudioResponse() {
+    GoogleSpeechManager.sendAudioResponse('', (response) => {
+      console.warn('Created a new response', response);
     });
   }
-
-  onSpeechStart = (e) => {
-    console.log('onSpeechStart', e);
-  };
-
-  onSpeechRecognized = (e) => {
-    console.log('onSpeechRecognized', e);
-  };
-
-  onSpeechEnd = (e) => {
-    console.log('onSpeechEnd', e);
-    this.startRecognizing();
-  };
-
-  onSpeechError = (e) => {
-    console.log('onSpeechError', e);
-    this.setState({
-      error: JSON.stringify(e.error),
-    });
-  };
-
-  onSpeechPartialResults = (e) => {
-    console.log('onSpeechPartialResults: ', e);
-    this.setState({
-      partialResults: e.value,
-    });
-  };
-
-  onSpeechVolumeChanged = (e) => {
-    // console.log('onSpeechVolumeChanged: ', e);
-  };
 
   onSpeechResults = (e) => {
     console.log('onSpeechResults', e);
