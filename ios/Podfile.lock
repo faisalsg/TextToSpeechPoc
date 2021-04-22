@@ -722,7 +722,7 @@ PODS:
     - React
   - RNScreens (2.11.0):
     - React
-  - TextToSpeech (2.0.0):
+  - TextToSpeech (4.1.0):
     - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -928,7 +928,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
-  TextToSpeech: 4e2fc50c7495416c6da5a1662ad3f750c58d3c85
+  TextToSpeech: b3aa777ff5585705f179c0a2436bfd0926d1716e
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

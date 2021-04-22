@@ -29,13 +29,13 @@ export default class HomeScreen extends Component {
       speechPitch: 1,
       text: ' ',
       voices: [],
-      ttsStatus: 'initializing',
+      ttsStatus: ' ',
       selectedVoice: null,
     };
   }
 
   buttonPressed = async (title) => {
-    // await this.readText(title);
+    this.readText(title);
     this.setState({ dishSelected: title });
   };
 
@@ -48,10 +48,21 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    // This will start recording
     this.startRecognizing();
 
-    Tts.addEventListener('tts-finish', (event) => this.moveToRecipeScreen());
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    // Event listener for text-to-speech
+    Tts.addEventListener('tts-start', (event) => {
+      console.log('event listener start', this.state.ttsStatus);
+      this.setState({ ttsStatus: 'available' });
+    });
+    Tts.addEventListener('tts-finish', (event) => {
+      console.log('event listener finish', this.state.ttsStatus);
+      this.setState({ ttsStatus: 'busy' });
+    });
+    Tts.addEventListener('tts-cancel', (event) =>
+      this.setState({ ttsStatus: 'cancelled' })
+    );
     Tts.setDefaultRate(this.state.speechRate);
     Tts.setDefaultPitch(this.state.speechPitch);
     Tts.getInitStatus().then(this.initTts);
@@ -96,7 +107,7 @@ export default class HomeScreen extends Component {
       } else if (question.includes('home screen')) {
         setTimeout(() => {
           this.props.navigation.navigate(NavigationConstants.TestScreen);
-        }, 2000);
+        }, 1000);
       } else {
         console.log('Not recognized');
       }
@@ -131,37 +142,24 @@ export default class HomeScreen extends Component {
       this.setState({
         voices: availableVoices,
         selectedVoice,
-        ttsStatus: 'initialized',
+        ttsStatus: 'voice set',
       });
-    } else {
-      this.setState({ ttsStatus: 'initialized' });
     }
   };
-  // readText = async (text) => {
-  //   Tts.stop();
-  //   Tts.speak(text);
-  // };
+  readText = async (text) => {
+    Tts.stop();
+    Tts.speak(text);
+  };
 
   render() {
     return (
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>{Texts.clove}</Text>
-          <Text
-            style={
-              {
-                // ...styles.headingText,
-                // ...styles.subHeadingText,
-              }
-            }
-          >
-            {/* {this.props.route.params.value} */}
-            {this.state.results}
-          </Text>
+          <Text>{this.state.results}</Text>
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
-                console.log('hey alexa');
                 this.startRecognizing();
               }}
             >
