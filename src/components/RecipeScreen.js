@@ -9,7 +9,6 @@ import {
   Image,
   TouchableOpacity,
   NativeModules,
-  NativeEventEmitter,
 } from 'react-native';
 import { RecipeOne, Texts } from '../util/constants/Strings';
 import { Colors, Enums } from '../util/constants/Constants';
@@ -17,14 +16,8 @@ import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
 import { RecipeData, Data } from './MockData';
-import Tts from 'react-native-tts';
 
 const { GoogleSpeechManager } = NativeModules;
-const eventEmitter = new NativeEventEmitter(GoogleSpeechManager);
-
-const onSessionConnect = (event) => {
-  console.log(event);
-};
 
 export default class RecipeScreen extends Component {
   constructor(props) {
@@ -39,36 +32,13 @@ export default class RecipeScreen extends Component {
       timerReset: '0',
       currentIngStep: 0,
       currentRecStep: 0,
-      // TTS : Text speech settings
-      speechRate: 0.42,
-      speechPitch: 1,
-      text: ' ',
-      voices: [],
-      ttsStatus: 'initializing',
-      selectedVoice: null,
       remTimeCounter: 0,
     };
   }
 
   async componentDidMount() {
+    // This will start recording
     this.startRecognizing();
-
-    const subscription = eventEmitter.addListener(
-      'onSpeechPartialResults',
-      onSessionConnect
-    );
-
-    // Event Listeners for speech-to-text
-    Tts.addEventListener('tts-start', (event) => {
-      console.log(event);
-    });
-    Tts.addEventListener('tts-finish', (event) => {
-      this.nextStep();
-    });
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
-    Tts.setDefaultRate(this.state.speechRate);
-    Tts.setDefaultPitch(this.state.speechPitch);
-    Tts.getInitStatus().then(this.initTts);
   }
 
   async componentWillUnmount() {
@@ -76,39 +46,27 @@ export default class RecipeScreen extends Component {
   }
 
   async startRecognizing() {
-    GoogleSpeechManager.startRecording();
-  }
-
-  async getAudioResponse() {
-    GoogleSpeechManager.sendAudioResponse('', (response) => {
-      console.warn('Created a new response', response);
+    GoogleSpeechManager.startRecording('', (response) => {
+      console.warn('Created start response', response);
+      this.setState({
+        results: ' ',
+      });
+      this.displayResults(response);
     });
   }
+
+  displayResults = (response) => {
+    if (typeof response !== 'undefined' && response.length > 0) {
+      this.setState({
+        results: response[0][0].transcript.toLowerCase(),
+      });
+      this.onSpeechResults(response[0][0].transcript.toLowerCase());
+    }
+  };
 
   onSpeechResults = (e) => {
-    console.log('onSpeechResults', e);
-    this.setState({
-      results: e.value,
-    });
-    const latestArray = e.value[e.value.length - 1];
-    const indexOfTrigger =
-      latestArray.lastIndexOf('hello clove') ||
-      latestArray.lastIndexOf('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove');
-    if (
-      latestArray.includes('hello clove') ||
-      latestArray.includes('Hello clove') ||
-      latestArray.includes('hello close') ||
-      latestArray.includes('Hello close') ||
-      latestArray.includes('hello glove') ||
-      latestArray.includes('Hello glove')
-    ) {
-      const question = latestArray
-        .substring(indexOfTrigger + 11, latestArray.length)
-        .toLowerCase();
+    if (e.includes('hello app') || e.includes('hello App')) {
+      const question = e.toLowerCase();
       // Action to play/pause the timer.
       if (
         question.includes(Texts.play) ||
@@ -123,7 +81,6 @@ export default class RecipeScreen extends Component {
 
         // Action to next step
       } else if (question.includes(Texts.next)) {
-        Tts.stop();
         this.setState({
           text: ' ',
         });
@@ -131,7 +88,6 @@ export default class RecipeScreen extends Component {
 
         // Action to previous step
       } else if (question.includes(Texts.previous)) {
-        Tts.stop();
         this.setState({
           text: ' ',
         });
@@ -146,16 +102,6 @@ export default class RecipeScreen extends Component {
         // To know what should be the temperature of the oven
       } else if (question.includes(Texts.ovenTemp)) {
         this.readText(RecipeOne.temp);
-
-        // To set the timer according the user
-        // TODO: this part is not working right now
-        // } else if (
-        //   question.includes(Texts.changeTimer) ||
-        //   question.includes(Texts.setTimer)
-        // ) {
-        //   let num = parseInt(question.replace(/[^0-9]/g, ''));
-        //   this.updateTimer(num);
-        //   this.readText(`Timer is set to ${num}`);
 
         // To answer quantity related requirements
       } else if (question.includes(Texts.quantity)) {
@@ -207,6 +153,7 @@ export default class RecipeScreen extends Component {
         console.log('Not recognized');
       }
     }
+    this.startRecognizing();
   };
 
   updateTimer = (num) => {
@@ -257,7 +204,6 @@ export default class RecipeScreen extends Component {
   };
 
   previousStep = () => {
-    Tts.stop();
     // if at step 0 do nothing
     if (this.state.step === Enums.one) {
       null;
@@ -310,7 +256,6 @@ export default class RecipeScreen extends Component {
   };
 
   nextStep = () => {
-    Tts.stop();
     // if at step 0 will again be at step 0
     if (this.state.step === Enums.one) {
       this.setState(
@@ -361,47 +306,7 @@ export default class RecipeScreen extends Component {
     }
   };
 
-  initTts = async () => {
-    const voices = await Tts.voices();
-    const availableVoices = voices
-      .filter((v) => !v.networkConnectionRequired && !v.notInstalled)
-      .map((v) => {
-        return { id: v.id, name: v.name, language: v.language };
-      });
-    // Here in console there are list of voices available for android and ios
-    // But here the voice is set as per iOS
-    // Selection is based as per language en-US
-    // TODO: In future needs to get set for android also.
-    // console.log(voices);
-
-    let selectedVoice = null;
-
-    // voices[9] - {"id": "com.apple.ttsbundle.Samantha-compact", "language": "en-US", "name": "Samantha", "quality": 300}
-    if (voices && voices.length > 0) {
-      selectedVoice = voices[9].id;
-      try {
-        await Tts.setDefaultLanguage(voices[9].language);
-      } catch (err) {
-        console.log(`setDefaultLanguage error `, err);
-      }
-      await Tts.setDefaultVoice(voices[9].id);
-      this.setState({
-        voices: availableVoices,
-        selectedVoice,
-        ttsStatus: 'initialized',
-      });
-    } else {
-      this.setState({ ttsStatus: 'initialized' });
-    }
-  };
-
-  readText = async (text) => {
-    Tts.stop();
-    Tts.speak(text);
-  };
-
   render() {
-    console.log(this.state.text);
     return (
       <SafeAreaView style={styles.rootContainer}>
         <View style={styles.headingContainer}>
@@ -420,7 +325,6 @@ export default class RecipeScreen extends Component {
           <View style={styles.micContainer}>
             <TouchableOpacity
               onPress={() => {
-                Tts.stop();
                 this.startRecognizing();
               }}
             >

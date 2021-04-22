@@ -15,7 +15,6 @@ import { Colors, NavigationConstants } from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { Data } from './MockData';
 import { ImageConstants } from '../assets/ImageConstants';
-import Tts from 'react-native-tts';
 
 const { GoogleSpeechManager } = NativeModules;
 
@@ -24,52 +23,28 @@ export default class HomeScreen extends Component {
     super(props);
     this.state = {
       dishSelected: '',
-      // TTS : Text speech settings
-      speechRate: 0.42,
-      speechPitch: 1,
-      text: ' ',
-      voices: [],
-      ttsStatus: ' ',
-      selectedVoice: null,
     };
-  }
-
-  buttonPressed = async (title) => {
-    this.readText(title);
-    this.setState({ dishSelected: title });
-  };
-
-  moveToRecipeScreen() {
-    console.warn('move to next screen');
-    let title = this.state.dishSelected;
-    this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
-      value: title,
-    });
   }
 
   async componentDidMount() {
     // This will start recording
     this.startRecognizing();
-
-    // Event listener for text-to-speech
-    Tts.addEventListener('tts-start', (event) => {
-      console.log('event listener start', this.state.ttsStatus);
-      this.setState({ ttsStatus: 'available' });
-    });
-    Tts.addEventListener('tts-finish', (event) => {
-      console.log('event listener finish', this.state.ttsStatus);
-      this.setState({ ttsStatus: 'busy' });
-    });
-    Tts.addEventListener('tts-cancel', (event) =>
-      this.setState({ ttsStatus: 'cancelled' })
-    );
-    Tts.setDefaultRate(this.state.speechRate);
-    Tts.setDefaultPitch(this.state.speechPitch);
-    Tts.getInitStatus().then(this.initTts);
   }
 
   async componentWillUnmount() {
     subscription.remove();
+  }
+
+  buttonPressed = async (title) => {
+    this.setState({ dishSelected: title });
+  };
+
+  moveToRecipeScreen() {
+    // here status available means -> The speech is ended and now we can move to other screen
+    let title = this.state.dishSelected;
+    this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
+      value: title,
+    });
   }
 
   async startRecognizing() {
@@ -92,10 +67,6 @@ export default class HomeScreen extends Component {
   };
 
   onSpeechResults = (e) => {
-    // const latestArray = e.value[e.value.length - 1];
-
-    // const indexOfTrigger =
-    //   e.lastIndexOf('hello google') || e.lastIndexOf('Hello google');
     if (e.includes('hello app') || e.includes('hello App')) {
       const question = e.toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
@@ -113,42 +84,6 @@ export default class HomeScreen extends Component {
       }
     }
     this.startRecognizing();
-  };
-
-  initTts = async () => {
-    const voices = await Tts.voices();
-    const availableVoices = voices
-      .filter((v) => !v.networkConnectionRequired && !v.notInstalled)
-      .map((v) => {
-        return { id: v.id, name: v.name, language: v.language };
-      });
-    // Here in console there are list of voices available for android and ios
-    // But here the voice is set as per iOS
-    // Selection is based as per language en-US
-    // TODO: In future needs to get set for android also.
-    // console.log(voices);
-
-    let selectedVoice = null;
-
-    // voices[9] - {"id": "com.apple.ttsbundle.Samantha-compact", "language": "en-US", "name": "Samantha", "quality": 300}
-    if (voices && voices.length > 0) {
-      selectedVoice = voices[9].id;
-      try {
-        await Tts.setDefaultLanguage(voices[9].language);
-      } catch (err) {
-        console.log(`setDefaultLanguage error `, err);
-      }
-      await Tts.setDefaultVoice(voices[9].id);
-      this.setState({
-        voices: availableVoices,
-        selectedVoice,
-        ttsStatus: 'voice set',
-      });
-    }
-  };
-  readText = async (text) => {
-    Tts.stop();
-    Tts.speak(text);
   };
 
   render() {
