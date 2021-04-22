@@ -68,11 +68,7 @@ export default class RecipeScreen extends Component {
     if (e.includes('hello app') || e.includes('hello App')) {
       const question = e.toLowerCase();
       // Action to play/pause the timer.
-      if (
-        question.includes(Texts.play) ||
-        question.includes(Texts.pause) ||
-        question.includes(Texts.stop)
-      ) {
+      if (question.includes(Texts.play) || question.includes(Texts.stop)) {
         this.toggleTimer();
 
         // Action to reset timer
@@ -97,57 +93,57 @@ export default class RecipeScreen extends Component {
         question.includes(Texts.mainMenu) ||
         question.includes(Texts.homeScreen)
       ) {
-        this.props.navigation.goBack();
-
+        setTimeout(() => {
+          this.props.navigation.goBack();
+        }, 500);
         // To know what should be the temperature of the oven
       } else if (question.includes(Texts.ovenTemp)) {
-        this.readText(RecipeOne.temp);
-
+        // this.readText(RecipeOne.temp);
         // To answer quantity related requirements
-      } else if (question.includes(Texts.quantity)) {
-        if (question.includes(Texts.milk)) {
-          this.readText(RecipeData.ingred[0].step);
-        } else if (question.includes(Texts.honey)) {
-          this.readText(RecipeData.ingred[1].step);
-        } else if (question.includes(Texts.unsaltedButter)) {
-          this.readText(RecipeData.ingred[2].step);
-        } else if (question.includes(Texts.flour)) {
-          this.readText(RecipeData.ingred[3].step);
-        } else if (question.includes(Texts.sugar)) {
-          this.readText(RecipeData.ingred[4].step);
-        } else if (question.includes(Texts.orange)) {
-          this.readText(RecipeData.ingred[5].step);
-        } else if (question.includes(Texts.clementine)) {
-          this.readText(RecipeData.ingred[6].step);
-        } else if (question.includes(Texts.cinnamon)) {
-          this.readText(RecipeData.ingred[7].step);
-        } else if (question.includes(Texts.nutmeg)) {
-          this.readText(RecipeData.ingred[8].step);
-        } else if (question.includes(Texts.dates)) {
-          this.readText(RecipeData.ingred[9].step);
-        } else if (question.includes(Texts.macadamiaNuts)) {
-          this.readText(RecipeData.ingred[10].step);
-        } else if (question.includes(Texts.eggs)) {
-          this.readText(RecipeData.ingred[11].step);
-        } else if (question.includes(Texts.topping)) {
-          this.readText(RecipeData.ingred[12].step);
-        } else if (
-          question.includes(Texts.demerara) ||
-          question.includes(Texts.sugar)
-        ) {
-          this.readText(RecipeData.ingred[13].step);
-          //
-        } else {
-          // do nothing
-        }
+        // } else if (question.includes(Texts.quantity)) {
+        //   if (question.includes(Texts.milk)) {
+        //     this.readText(RecipeData.ingred[0].step);
+        //   } else if (question.includes(Texts.honey)) {
+        //     this.readText(RecipeData.ingred[1].step);
+        //   } else if (question.includes(Texts.unsaltedButter)) {
+        //     this.readText(RecipeData.ingred[2].step);
+        //   } else if (question.includes(Texts.flour)) {
+        //     this.readText(RecipeData.ingred[3].step);
+        //   } else if (question.includes(Texts.sugar)) {
+        //     this.readText(RecipeData.ingred[4].step);
+        //   } else if (question.includes(Texts.orange)) {
+        //     this.readText(RecipeData.ingred[5].step);
+        //   } else if (question.includes(Texts.clementine)) {
+        //     this.readText(RecipeData.ingred[6].step);
+        //   } else if (question.includes(Texts.cinnamon)) {
+        //     this.readText(RecipeData.ingred[7].step);
+        //   } else if (question.includes(Texts.nutmeg)) {
+        //     this.readText(RecipeData.ingred[8].step);
+        //   } else if (question.includes(Texts.dates)) {
+        //     this.readText(RecipeData.ingred[9].step);
+        //   } else if (question.includes(Texts.macadamiaNuts)) {
+        //     this.readText(RecipeData.ingred[10].step);
+        //   } else if (question.includes(Texts.eggs)) {
+        //     this.readText(RecipeData.ingred[11].step);
+        //   } else if (question.includes(Texts.topping)) {
+        //     this.readText(RecipeData.ingred[12].step);
+        //   } else if (
+        //     question.includes(Texts.demerara) ||
+        //     question.includes(Texts.sugar)
+        //   ) {
+        //     this.readText(RecipeData.ingred[13].step);
+        //     //
+        // } else {
+        //   // do nothing
+        // }
         // To check how much time will be left
-      } else if (
-        question.includes(Texts.timeLeft) ||
-        question.includes(Texts.timeRemaining)
-      ) {
-        let remTime = this.state.totalDuration - this.state.remTimeCounter;
-        let result = this.secondsToHms(remTime);
-        this.readText(`${result} is left`);
+        // } else if (
+        //   question.includes(Texts.timeLeft) ||
+        //   question.includes(Texts.timeRemaining)
+        // ) {
+        //   let remTime = this.state.totalDuration - this.state.remTimeCounter;
+        //   let result = this.secondsToHms(remTime);
+        // this.readText(`${result} is left`);
         // default action
       } else {
         console.log('Not recognized');
@@ -215,14 +211,9 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep - 1,
           });
-      this.setState(
-        {
-          text: RecipeData.ingred[this.state.currentIngStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        text: RecipeData.ingred[this.state.currentIngStep].step,
+      });
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === 0
         ? this.setState({
@@ -232,41 +223,26 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep - 1,
           });
-      this.setState(
-        {
-          text: RecipeData.recipe[this.state.currentRecStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        text: RecipeData.recipe[this.state.currentRecStep].step,
+      });
       // if at last step then move to recipe step
     } else {
-      this.setState(
-        {
-          currentRecStep: 0,
-          step: Enums.three,
-          text: RecipeData.recipe[this.state.currentRecStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        currentRecStep: 0,
+        step: Enums.three,
+        text: RecipeData.recipe[this.state.currentRecStep].step,
+      });
     }
   };
 
   nextStep = () => {
     // if at step 0 will again be at step 0
     if (this.state.step === Enums.one) {
-      this.setState(
-        {
-          step: Enums.two,
-          text: RecipeData.ingred[this.state.currentIngStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        step: Enums.two,
+        text: RecipeData.ingred[this.state.currentIngStep].step,
+      });
     } else if (this.state.step === Enums.two) {
       this.state.currentIngStep === RecipeData.ingred.length - 1
         ? this.setState({
@@ -276,14 +252,9 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentIngStep: this.state.currentIngStep + 1,
           });
-      this.setState(
-        {
-          text: RecipeData.ingred[this.state.currentIngStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        text: RecipeData.ingred[this.state.currentIngStep].step,
+      });
     } else if (this.state.step === Enums.three) {
       this.state.currentRecStep === RecipeData.recipe.length - 1
         ? this.setState({
@@ -292,14 +263,9 @@ export default class RecipeScreen extends Component {
         : this.setState({
             currentRecStep: this.state.currentRecStep + 1,
           });
-      this.setState(
-        {
-          text: RecipeData.recipe[this.state.currentRecStep].step,
-        },
-        () => {
-          this.readText(this.state.text);
-        }
-      );
+      this.setState({
+        text: RecipeData.recipe[this.state.currentRecStep].step,
+      });
       // if at last step then do nothing
     } else {
       null;
@@ -428,7 +394,7 @@ export default class RecipeScreen extends Component {
           step: Enums.two,
         });
         this.toggleTimer();
-        this.readText(RecipeData.ingred[this.state.currentIngStep].step);
+        // this.readText(RecipeData.ingred[this.state.currentIngStep].step);
       }
       return this.state.countDownStart;
     } else if (this.state.step === Enums.two) {
@@ -444,7 +410,7 @@ export default class RecipeScreen extends Component {
       return (
         <Text>{RecipeData.recipe[this.state.currentRecStep].step}</Text>
         //     this.state.currentRecStep === RecipeData.recipe.length - 1
-        //       ? this.setState({ step: Enums.four })
+        // ? this.setState({ step: Enums.four })
         //       : this.setState({
         //           currentRecStep: this.state.currentRecStep + 1,
       );

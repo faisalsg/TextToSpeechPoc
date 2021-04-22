@@ -37,15 +37,12 @@ export default class HomeScreen extends Component {
 
   buttonPressed = async (title) => {
     this.setState({ dishSelected: title });
+    setTimeout(() => {
+      this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
+        value: title,
+      });
+    }, 500);
   };
-
-  moveToRecipeScreen() {
-    // here status available means -> The speech is ended and now we can move to other screen
-    let title = this.state.dishSelected;
-    this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
-      value: title,
-    });
-  }
 
   async startRecognizing() {
     GoogleSpeechManager.startRecording('', (response) => {
@@ -78,7 +75,7 @@ export default class HomeScreen extends Component {
       } else if (question.includes('home screen')) {
         setTimeout(() => {
           this.props.navigation.navigate(NavigationConstants.TestScreen);
-        }, 1000);
+        }, 500);
       } else {
         console.log('Not recognized');
       }
