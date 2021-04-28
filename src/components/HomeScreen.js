@@ -37,8 +37,9 @@ export default class HomeScreen extends Component {
 
   buttonPressed = async (title) => {
     this.setState({ dishSelected: title });
+    GoogleSpeechManager.stopRecording();
     setTimeout(() => {
-      this.props.navigation.navigate(NavigationConstants.RecipeScreen, {
+      this.props.navigation.push(NavigationConstants.RecipeScreen, {
         value: title,
       });
     }, 500);
@@ -64,7 +65,7 @@ export default class HomeScreen extends Component {
   };
 
   onSpeechResults = (e) => {
-    if (e.includes('hello app') || e.includes('hello App')) {
+    if (e.includes('ok google') || e.includes('ok google')) {
       const question = e.toLowerCase();
       if (question.includes(Data[0].title.toLowerCase())) {
         this.buttonPressed(Data[0].title);

@@ -11,7 +11,11 @@ import {
   NativeModules,
 } from 'react-native';
 import { RecipeOne, Texts } from '../util/constants/Strings';
-import { Colors, Enums } from '../util/constants/Constants';
+import {
+  Colors,
+  Enums,
+  NavigationConstants,
+} from '../util/constants/Constants';
 import CustomMainButton from '../util/CustomMainButton';
 import { ImageConstants } from '../assets/ImageConstants';
 import CountDown from 'react-native-countdown-component';
@@ -65,10 +69,14 @@ export default class RecipeScreen extends Component {
   };
 
   onSpeechResults = (e) => {
-    if (e.includes('hello app') || e.includes('hello App')) {
+    if (e.includes('ok google') || e.includes('ok google')) {
       const question = e.toLowerCase();
       // Action to play/pause the timer.
-      if (question.includes(Texts.play) || question.includes(Texts.stop)) {
+      if (
+        question.includes(Texts.play) ||
+        question.includes(Texts.pause) ||
+        question.includes(Texts.stop)
+      ) {
         this.toggleTimer();
 
         // Action to reset timer
@@ -93,8 +101,9 @@ export default class RecipeScreen extends Component {
         question.includes(Texts.mainMenu) ||
         question.includes(Texts.homeScreen)
       ) {
+        GoogleSpeechManager.stopRecording();
         setTimeout(() => {
-          this.props.navigation.goBack();
+          this.props.navigation.push(NavigationConstants.HomeScreen);
         }, 500);
         // To know what should be the temperature of the oven
       } else if (question.includes(Texts.ovenTemp)) {
